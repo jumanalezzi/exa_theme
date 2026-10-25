@@ -41,7 +41,7 @@ required_apps = ["exa_app"]
 # web_include_js = "/assets/exa_theme/js/admin.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "admin/public/scss/website"
+# website_theme_scss = "exa_theme/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -61,7 +61,7 @@ required_apps = ["exa_app"]
 # Svg Icons
 # ------------------
 # include app icons in desk
-# app_include_icons = "admin/public/icons.svg"
+# app_include_icons = "exa_theme/public/icons.svg"
 
 # Home Pages
 # ----------
