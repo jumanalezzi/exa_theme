@@ -1,0 +1,20 @@
+/* Exa ERP desk layout (/app). Colours and fonts are applied at runtime by desk_theme.js. */
+
+/* List and report pages: the "Filter By" sidebar starts collapsed on desktop so the table uses the
+   full width. The ☰ button next to the page title opens it (body.exa-list-sidebar-open). */
+@media (min-width: 992px) {
+	body:not(.exa-list-sidebar-open) .page-container[data-page-route^="List/"] .layout-side-section,
+	body:not(.exa-list-sidebar-open) .page-container[data-page-route^="Report/"] .layout-side-section {
+		display: none !important;
+	}
+}
+
+/* Standard filter fields share one row instead of wrapping early */
+.page-form.flex {
+	flex-wrap: wrap;
+	row-gap: 8px;
+}
+.page-form .standard-filter-section {
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+}

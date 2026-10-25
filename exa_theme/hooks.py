@@ -4,11 +4,10 @@ app_publisher = "juman alezzi"
 app_description = "Exa ERP UI theme. Product name and logos come from exa_app (exa_app/branding.py)."
 app_email = "jumanalezzi@gmail.com"
 app_license = "mit"
-# 1. تحديد الصفحة الرئيسية للتطبيق برمجياً
-home_page = "madar"
-
-# 2. إجبار النظام على التوجه لمدار بعد نجاح تسجيل الدخول
-login_redirect_url = "/madar"
+# Users work in the standard desk (/app), which desk_theme.js/css style directly.
+# /madar stays available as an optional page but is no longer forced as home or after login.
+# home_page = "madar"
+# login_redirect_url = "/madar"
 
 # 3. إجبار النظام على التوجه لمدار بعد تسجيل الخروج 
 # (ومنه سيتم سحبه للوجن لأن الجلسة انتهت)
@@ -464,7 +463,13 @@ after_migrate = [
     "exa_theme.setup_system.run_setup"
 ]
 
-app_include_js = ["/assets/exa_theme/js/madar_pos_cards_script.js"]
-app_include_css = ["/assets/exa_theme/css/madar_pos_cards_theme.css"]
+app_include_js = [
+	"/assets/exa_theme/js/madar_pos_cards_script.js",
+	"/assets/exa_theme/js/desk_theme.js",
+]
+app_include_css = [
+	"/assets/exa_theme/css/madar_pos_cards_theme.css",
+	"/assets/exa_theme/css/desk_theme.css",
+]
 
 # page_css = {"pos-awesome": "public/css/madar_pos_theme.css"}
