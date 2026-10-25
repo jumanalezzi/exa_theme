@@ -1,0 +1,978 @@
+<style>
+  .theme-settings-container { display: flex; flex-direction: column; gap: 20px; padding: 20px; direction: rtl; }
+  .theme-top-section { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  
+  /* Left Panel: Live Preview */
+  .preview-panel { flex: 1; min-width: 350px; background: var(--bg-surface, #fff); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 20px; }
+  .mockup-container { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; display: flex; height: 400px; font-family: 'Cairo', sans-serif; transition: 0.3s; }
+  
+  .mock-sidebar { width: 80px; display: flex; flex-direction: column; transition: 0.3s; }
+  .mock-logo { height: 50px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.3s; }
+  .mock-menu-item { padding: 15px; text-align: center; font-size: 12px; transition: 0.3s; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.05); }
+  
+  .mock-main { flex: 1; display: flex; flex-direction: column; transition: 0.3s; }
+  .mock-header { height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); z-index: 10; }
+  .mock-header-btn { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+  
+  .mock-content { flex: 1; padding: 20px; transition: 0.3s; }
+  .mock-card { padding: 15px; border-radius: 6px; border: 1px solid transparent; transition: 0.3s; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .mock-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; transition: 0.3s; }
+  .mock-text { font-size: 12px; transition: 0.3s; }
+  
+  .mock-btn-primary { padding: 8px 15px; border-radius: 4px; color: #fff; border: none; font-size: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+  .mock-btn-secondary { padding: 8px 15px; border-radius: 4px; color: #fff; border: none; font-size: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; margin-right: 5px; }
+
+  /* Right Panel: Form & Tabs */
+  .form-panel { flex: 1; width: 100%; background: var(--bg-surface, #fff); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  
+  /* AI Section */
+  .ai-section { background: linear-gradient(to right, #f8f9fa, #e9ecef); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6; }
+  .ai-controls { display: flex; gap: 10px; margin-top: 10px; }
+  .ai-btn { background: linear-gradient(135deg, #6c5ce7, #8e44ad); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: bold; transition: 0.3s; }
+  .ai-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ai-loading { display: none; animation: spin 1s linear infinite; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  
+  /* Custom Tabs */
+  .theme-tabs { display: flex; border-bottom: 2px solid #dee2e6; margin-bottom: 20px; overflow-x: auto; }
+  .theme-tab { padding: 10px 20px; cursor: pointer; font-weight: bold; color: #6c757d; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: 0.3s; white-space: nowrap; }
+  .theme-tab:hover { color: #0d6efd; }
+  .theme-tab.active { color: #0d6efd; border-bottom-color: #0d6efd; }
+  
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  
+  /* Color Inputs Grid */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+  .color-field { display: flex; flex-direction: column; gap: 5px; }
+  .color-field label { font-size: 12px; font-weight: bold; color: #495057; }
+  .color-input-wrapper { display: flex; align-items: center; gap: 8px; border: 1px solid #ced4da; border-radius: 4px; padding: 2px 8px; background: #fff; }
+  .color-input-wrapper input[type="color"] { border: none; padding: 0; width: 25px; height: 25px; cursor: pointer; background: transparent; }
+  .color-input-wrapper input[type="text"] { border: none; outline: none; width: 60px; font-family: monospace; font-size: 12px; }
+
+  /* Bottom Section: Theme List */
+  .theme-list-section { background: var(--bg-surface, #fff); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-top: 20px; }
+  .theme-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+  .theme-card { border: 1px solid var(--border-color, #e0e0e0); border-radius: 6px; padding: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--bg-main, #f9f9f9); transition: 0.2s; }
+  .theme-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+  .theme-card-info { flex: 1; display: flex; align-items: center; gap: 10px; }
+  .theme-preview-dots { display: flex; gap: 3px; }
+  .theme-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+  .theme-card-title { font-weight: bold; font-size: 16px; margin-bottom: 2px; }
+  .theme-card-sub { font-size: 11px; color: #666; }
+  
+  /* Edit Modal */
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1050; }
+  .modal-box { background: var(--bg-surface, #fff); padding: 25px; border-radius: 8px; width: 400px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+</style>
+
+<div class="theme-settings-container" id="themeSettingsApp">
+  <!-- Top Section (Add/Preview) -->
+  <div class="theme-top-section">
+      <!-- Form Panel -->
+      <div class="form-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin: 0; color: var(--text-color);">إضافة ثيم جديد</h3>
+              <div>
+                  <button class="btn btn-info text-white" id="openPreviewBtn" style="margin-left: 10px;"><i class="fas fa-eye"></i> المعاينة الحية</button>
+                  <button class="btn btn-primary" id="saveThemeBtn" disabled><i class="fas fa-save"></i> حفظ الثيم</button>
+              </div>
+          </div>
+          
+          <div class="row mb-3">
+              <div class="col-md-6">
+                  <label class="form-label" style="font-size:12px;font-weight:bold;">اسم الثيم (عربي) *</label>
+                  <input type="text" id="newThemeAr" class="form-control" placeholder="مثال: الواحة الهادئة">
+              </div>
+              <div class="col-md-6">
+                  <label class="form-label" style="font-size:12px;font-weight:bold;">اسم الثيم (إنجليزي) *</label>
+                  <input type="text" id="newThemeEn" class="form-control" placeholder="مثال: Calm Oasis">
+              </div>
+          </div>
+
+          <!-- AI Section -->
+          <div class="ai-section" id="aiThemeSection" style="display: none;">
+              <div style="font-weight: bold; font-size: 13px; margin-bottom: 5px; color: #495057;"><i class="fas fa-robot text-primary"></i> المولد الذكي للثيمات</div>
+              <input type="text" id="aiPrompt" class="form-control" placeholder="صف الثيم الذي تريده (مثال: ثيم طبي مريح للعين يعتمد على الأزرق الفاتح والأبيض)">
+              <div class="ai-controls">
+                  <button class="ai-btn" id="aiGenerateBtn">
+                      <i class="fas fa-magic"></i> توليد مخصص
+                      <i class="fas fa-spinner fa-spin ai-loading"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" id="aiRandomBtn" style="font-weight:bold;">
+                      <i class="fas fa-dice"></i> اقتراح عشوائي
+                      <i class="fas fa-spinner fa-spin ai-loading"></i>
+                  </button>
+              </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="theme-tabs">
+              <div class="theme-tab active" data-tab="tab-palette"><i class="fas fa-palette"></i> الأساسيات</div>
+              <div class="theme-tab" data-tab="tab-header"><i class="fas fa-heading"></i> الهيدر</div>
+              <div class="theme-tab" data-tab="tab-sidebar"><i class="fas fa-bars"></i> الجانبية</div>
+              <div class="theme-tab" data-tab="tab-content"><i class="fas fa-file-alt"></i> المحتوى</div>
+          </div>
+
+          <!-- Tab: Palette -->
+          <div class="tab-content active" id="tab-palette">
+              <div class="color-grid">
+                  
+        <div class="color-field">
+            <label>الرئيسي (Primary)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_primary" value="#0d6efd">
+                <input type="text" id="text_palette_primary" value="#0d6efd">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>الثانوي (Secondary)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_secondary" value="#6c757d">
+                <input type="text" id="text_palette_secondary" value="#6c757d">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النجاح (Success)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_success" value="#198754">
+                <input type="text" id="text_palette_success" value="#198754">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>الخطأ (Danger)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_danger" value="#dc3545">
+                <input type="text" id="text_palette_danger" value="#dc3545">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>التحذير (Warning)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_warning" value="#ffc107">
+                <input type="text" id="text_palette_warning" value="#ffc107">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>المعلومات (Info)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_palette_info" value="#0dcaf0">
+                <input type="text" id="text_palette_info" value="#0dcaf0">
+            </div>
+        </div>
+        
+              </div>
+          </div>
+
+          <!-- Tab: Header -->
+          <div class="tab-content" id="tab-header">
+              <div class="color-grid">
+                  
+        <div class="color-field">
+            <label>الخلفية (Background)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_bg" value="#ffffff">
+                <input type="text" id="text_header_bg" value="#ffffff">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص (Text)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_text" value="#212529">
+                <input type="text" id="text_header_text" value="#212529">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>خلفية الأزرار</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_buttons_bg" value="#ffffff">
+                <input type="text" id="text_header_buttons_bg" value="transparent">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>نص الأزرار</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_buttons_text" value="#6c757d">
+                <input type="text" id="text_header_buttons_text" value="#6c757d">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>خلفية الأزرار (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_buttons_hover_bg" value="#f8f9fa">
+                <input type="text" id="text_header_buttons_hover_bg" value="#f8f9fa">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>نص الأزرار (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_header_buttons_hover_text" value="#0d6efd">
+                <input type="text" id="text_header_buttons_hover_text" value="#0d6efd">
+            </div>
+        </div>
+        
+              </div>
+          </div>
+
+          <!-- Tab: Sidebar -->
+          <div class="tab-content" id="tab-sidebar">
+              <div style="font-size:12px; color:#666; margin-bottom:10px;">المستوى الأول (Main Menu)</div>
+              <div class="color-grid mb-3">
+                  
+        <div class="color-field">
+            <label>الخلفية</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_bg" value="#ffffff">
+                <input type="text" id="text_sidebar_level_1_bg" value="#ffffff">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_text" value="#495057">
+                <input type="text" id="text_sidebar_level_1_text" value="#495057">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>الخلفية (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_hover_bg" value="#f8f9fa">
+                <input type="text" id="text_sidebar_level_1_hover_bg" value="#f8f9fa">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_hover_text" value="#0d6efd">
+                <input type="text" id="text_sidebar_level_1_hover_text" value="#0d6efd">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>الخلفية (Active)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_active_bg" value="#e9ecef">
+                <input type="text" id="text_sidebar_level_1_active_bg" value="#e9ecef">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص (Active)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_1_active_text" value="#0d6efd">
+                <input type="text" id="text_sidebar_level_1_active_text" value="#0d6efd">
+            </div>
+        </div>
+        
+              </div>
+              
+              <div style="font-size:12px; color:#666; margin-bottom:10px;">المستوى الثاني (Sub Menu)</div>
+              <div class="color-grid">
+                  
+        <div class="color-field">
+            <label>الخلفية</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_2_bg" value="#fafafa">
+                <input type="text" id="text_sidebar_level_2_bg" value="#fafafa">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_2_text" value="#6c757d">
+                <input type="text" id="text_sidebar_level_2_text" value="#6c757d">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>الخلفية (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_2_hover_bg" value="#f1f3f5">
+                <input type="text" id="text_sidebar_level_2_hover_bg" value="#f1f3f5">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص (Hover)</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_sidebar_level_2_hover_text" value="#0d6efd">
+                <input type="text" id="text_sidebar_level_2_hover_text" value="#0d6efd">
+            </div>
+        </div>
+        
+              </div>
+          </div>
+
+          <!-- Tab: Content -->
+          <div class="tab-content" id="tab-content">
+              <div class="color-grid">
+                  
+        <div class="color-field">
+            <label>خلفية الصفحة</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_page_bg" value="#f4f6f9">
+                <input type="text" id="text_content_page_bg" value="#f4f6f9">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>خلفية البطاقات</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_surface_bg" value="#ffffff">
+                <input type="text" id="text_content_surface_bg" value="#ffffff">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص الأساسي</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_text_primary" value="#212529">
+                <input type="text" id="text_content_text_primary" value="#212529">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>النص الباهت</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_text_muted" value="#6c757d">
+                <input type="text" id="text_content_text_muted" value="#6c757d">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>لون الحدود</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_border_color" value="#dee2e6">
+                <input type="text" id="text_content_border_color" value="#dee2e6">
+            </div>
+        </div>
+        
+                  
+        <div class="color-field">
+            <label>خلفية الحقول</label>
+            <div class="color-input-wrapper">
+                <input type="color" id="color_content_input_bg" value="#ffffff">
+                <input type="text" id="text_content_input_bg" value="#ffffff">
+            </div>
+        </div>
+        
+              </div>
+          </div>
+      </div>
+
+
+  </div>
+
+  <!-- Bottom Section (Theme List) -->
+  <div class="theme-list-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+          <h3 style="margin: 0; color: var(--text-color);">إدارة الثيمات</h3>
+          <div style="position: relative;">
+              <i class="fas fa-search" style="position: absolute; right: 15px; top: 12px; color: #888;"></i>
+              <input type="text" id="themeSearchInput" class="form-control" placeholder="ابحث عن ثيم..." style="width: 300px; padding-right: 35px; max-width: 100%;">
+          </div>
+      </div>
+      <div class="theme-cards-grid" id="themeCardsGrid">
+          <div style="text-align: center; width: 100%; color: #888; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>
+      </div>
+  </div>
+</div>
+
+<!-- Edit Theme Name Modal -->
+<div class="modal-overlay" id="editThemeModal">
+  <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h4 style="margin:0; font-weight:bold;">تعديل اسم الثيم</h4>
+          <button style="background:none; border:none; font-size:20px; cursor:pointer;" onclick="closeEditThemeModal()">&times;</button>
+      </div>
+      <input type="hidden" id="editThemeId">
+      <div class="mb-3">
+          <label style="font-size:12px;font-weight:bold;">اسم الثيم (عربي)</label>
+          <input type="text" id="editThemeAr" class="form-control">
+      </div>
+      <button class="btn btn-primary w-100" id="saveEditThemeBtn"><i class="fas fa-save"></i> حفظ التعديلات</button>
+  </div>
+</div>
+
+<script>
+  // Configuration map for colors
+  var colorMap = [
+      { id: 'palette.primary', default: '#0d6efd' }, { id: 'palette.secondary', default: '#6c757d' },
+      { id: 'palette.success', default: '#198754' }, { id: 'palette.danger', default: '#dc3545' },
+      { id: 'palette.warning', default: '#ffc107' }, { id: 'palette.info', default: '#0dcaf0' },
+      
+      { id: 'header.bg', default: '#ffffff' }, { id: 'header.text', default: '#212529' },
+      { id: 'header.buttons.bg', default: 'transparent' }, { id: 'header.buttons.text', default: '#6c757d' },
+      { id: 'header.buttons.hover_bg', default: '#f8f9fa' }, { id: 'header.buttons.hover_text', default: '#0d6efd' },
+      
+      { id: 'sidebar.level_1.bg', default: '#ffffff' }, { id: 'sidebar.level_1.text', default: '#495057' },
+      { id: 'sidebar.level_1.hover_bg', default: '#f8f9fa' }, { id: 'sidebar.level_1.hover_text', default: '#0d6efd' },
+      { id: 'sidebar.level_1.active_bg', default: '#e9ecef' }, { id: 'sidebar.level_1.active_text', default: '#0d6efd' },
+      
+      { id: 'sidebar.level_2.bg', default: '#fafafa' }, { id: 'sidebar.level_2.text', default: '#6c757d' },
+      { id: 'sidebar.level_2.hover_bg', default: '#f1f3f5' }, { id: 'sidebar.level_2.hover_text', default: '#0d6efd' },
+      
+      { id: 'content.page_bg', default: '#f4f6f9' }, { id: 'content.surface_bg', default: '#ffffff' },
+      { id: 'content.text_primary', default: '#212529' }, { id: 'content.text_muted', default: '#6c757d' },
+      { id: 'content.border_color', default: '#dee2e6' }, { id: 'content.input_bg', default: '#ffffff' }
+  ];
+
+  var settingsAllThemes = [];
+  var isAiAvailable = false;
+  var initialEditThemeAr = "";
+
+  $(document).ready(function() {
+      // Setup Tabs
+      $('.theme-tab').click(function() {
+          $('.theme-tab').removeClass('active');
+          $('.tab-content').removeClass('active');
+          $(this).addClass('active');
+          $('#' + $(this).data('tab')).addClass('active');
+      });
+
+      // Bind color inputs to preview
+      colorMap.forEach(c => {
+          let cid = c.id.replace(/\./g, '_');
+          $('#color_' + cid).on('input', function() {
+              $('#text_' + cid).val($(this).val());
+              updateLivePreview();
+              validateForm();
+          });
+          $('#text_' + cid).on('input', function() {
+              let val = $(this).val();
+              if(/^#([0-9A-F]{3}){1,2}$/i.test(val) || val === 'transparent') {
+                  if(val !== 'transparent') $('#color_' + cid).val(val);
+                  updateLivePreview();
+              }
+              validateForm();
+          });
+      });
+
+      $('#newThemeAr, #newThemeEn').on('input', validateForm);
+
+      loadSettingsThemes();
+      checkAIAvailability();
+
+      $('#themeSearchInput').on('input', function() {
+          renderThemes($(this).val());
+      });
+
+      $('#saveThemeBtn').click(saveNewTheme);
+      // edit theme is handled via loadThemeToEdit
+      
+      $('#openPreviewBtn').click(function() {
+          let arName = $('#newThemeAr').val().trim() || 'معاينة الثيم';
+          let enName = $('#newThemeEn').val().trim() || 'Theme Preview';
+          let jsonTheme = getFormColorsJson(arName, enName);
+          localStorage.setItem('madar_preview_theme', jsonTheme);
+          window.open('/madar?preview_theme=true', '_blank');
+      });
+      
+      $('#aiGenerateBtn').click(() => fetchAiSuggestion(false));
+      $('#aiRandomBtn').click(() => fetchAiSuggestion(true));
+      
+      $('#editThemeAr').on('input', function() {
+          let val = $(this).val().trim();
+          $('#saveEditThemeBtn').prop('disabled', !val || val === initialEditThemeAr);
+      });
+      
+      // Initialize preview
+      updateLivePreview();
+  });
+
+  function updateLivePreview() {
+      // A Helper to get value
+      const getVal = (id) => $('#text_' + id.replace(/\./g, '_')).val() || '#000000';
+      
+      // Header
+      $('#mockHeader').css({
+          'background-color': getVal('header.bg'),
+          'color': getVal('header.text')
+      });
+      $('.mock-header-btn').css({
+          'background-color': getVal('header.buttons.bg') === 'transparent' ? 'transparent' : getVal('header.buttons.bg'),
+          'color': getVal('header.buttons.text')
+      });
+      
+      // Sidebar Level 1
+      $('#mockSidebar').css('background-color', getVal('sidebar.level_1.bg'));
+      $('#mockLogo').css('color', getVal('palette.primary'));
+      
+      // Menu Items (Default)
+      $('.mock-menu-item:not(.active-menu)').css({
+          'color': getVal('sidebar.level_1.text'),
+          'background-color': 'transparent'
+      });
+      // Active Menu Item
+      $('.active-menu').css({
+          'background-color': getVal('sidebar.level_1.active_bg'),
+          'color': getVal('sidebar.level_1.active_text')
+      });
+      // Level 2 item via CSS custom property injection
+      document.documentElement.style.setProperty('--mock-level2-bg', getVal('sidebar.level_2.bg'));
+      document.documentElement.style.setProperty('--mock-level2-text', getVal('sidebar.level_2.text'));
+      
+      // Content Area
+      $('#mockContainer').css('background-color', getVal('content.page_bg'));
+      $('.mock-card').css({
+          'background-color': getVal('content.surface_bg'),
+          'border-color': getVal('content.border_color')
+      });
+      
+      // Texts
+      $('#mockTitle').css('color', getVal('content.text_primary'));
+      $('#mockCardTitle, #mockCardTitle2').css('color', getVal('content.text_primary'));
+      $('#mockText, #mockText2').css('color', getVal('content.text_muted'));
+      
+      // Buttons
+      $('#mockBtnPrimary').css('background-color', getVal('palette.primary'));
+      $('#mockBtnSecondary').css({
+          'background-color': 'transparent',
+          'border': '1px solid ' + getVal('content.border_color'),
+          'color': getVal('content.text_muted')
+      });
+      
+      // Danger Card Border
+      $('#mockCard2').css('border-right', '4px solid ' + getVal('palette.danger'));
+  }
+
+  function validateForm() {
+      let ar = $('#newThemeAr').val().trim();
+      let en = $('#newThemeEn').val().trim();
+      if(ar && en) {
+          $('#saveThemeBtn').prop('disabled', false);
+      } else {
+          $('#saveThemeBtn').prop('disabled', true);
+      }
+  }
+
+  function checkAIAvailability() {
+      fetch('/api/method/exa_theme.api.auto_detect_ai', {
+          method: 'POST',
+          headers: {'X-Frappe-CSRF-Token': frappe.csrf_token}
+      })
+      .then(res => res.json())
+      .then(r => {
+          if(r.message && r.message.status === 'success') {
+              isAiAvailable = true;
+              $('#aiThemeSection').slideDown();
+          }
+      })
+      .catch(err => console.error("Error checking AI:", err));
+  }
+
+  function fetchAiSuggestion(isRandom) {
+      alert("مرحباً! هذا إثبات أن التحديثات تصل بنجاح!");
+      let promptText = isRandom ? "" : $('#aiPrompt').val().trim();
+      if (!isRandom && !promptText) {
+          alert('يرجى كتابة وصف للثيم أولاً!');
+          $('#aiPrompt').focus();
+          return;
+      }
+
+      // Check max 12 themes limit
+      if (settingsAllThemes.length >= 12) {
+          alert('الحد الأقصى للثيمات المحفوظة هو 12 ثيماً. يرجى حذف أحد الثيمات قبل توليد ثيم جديد.');
+          return;
+      }
+      
+      $('.ai-btn, #aiRandomBtn').prop('disabled', true);
+      if (isRandom) {
+          $('#aiRandomBtn .ai-loading').show();
+      } else {
+          $('#aiGenerateBtn .ai-loading').show();
+      }
+      
+      let formData = new FormData();
+      formData.append('description', promptText);
+      
+      fetch('/api/method/exa_theme.api.suggest_madar_theme_ai', {
+          method: 'POST',
+          headers: {'X-Frappe-CSRF-Token': frappe.csrf_token},
+          body: formData
+      })
+      .then(res => res.json())
+      .then(r => {
+          $('.ai-btn, #aiRandomBtn').prop('disabled', false);
+          $('.ai-loading').hide();
+          
+          if(r.message) {
+              applyThemeJsonToForm(r.message);
+              alert('تم توليد الثيم بنجاح!');
+          } else if (r.exc) {
+              let excObj = JSON.parse(r.exc);
+              alert('خطأ: ' + (excObj[0] || 'تعذر توليد الثيم'));
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          alert('حدث خطأ أثناء الاتصال بالخادم.');
+          $('.ai-btn, #aiRandomBtn').prop('disabled', false);
+          $('.ai-loading').hide();
+      });
+  }
+
+  function applyThemeJsonToForm(themeObj) {
+      if(themeObj.theme_name_ar) $('#newThemeAr').val(themeObj.theme_name_ar);
+      if(themeObj.theme_name_en) $('#newThemeEn').val(themeObj.theme_name_en);
+      
+      if(themeObj.colors) {
+          // Flatten mapping
+          let flat = flattenObj(themeObj.colors);
+          for(let key in flat) {
+              let cid = key.replace(/\./g, '_');
+              let val = flat[key];
+              if($('#text_' + cid).length) {
+                  $('#text_' + cid).val(val);
+                  if(val !== 'transparent') {
+                      $('#color_' + cid).val(val);
+                  }
+              }
+          }
+      }
+      updateLivePreview();
+      validateForm();
+  }
+
+  function flattenObj(obj, parent = '', res = {}) {
+      for(let key in obj) {
+          let propName = parent ? parent + '.' + key : key;
+          if(typeof obj[key] == 'object' && obj[key] !== null) {
+              flattenObj(obj[key], propName, res);
+          } else {
+              res[propName] = obj[key];
+          }
+      }
+      return res;
+  }
+
+  function getFormColorsJson(arName, enName) {
+      let colors = { palette: {}, header: { buttons: {} }, sidebar: { level_1: {}, level_2: {}, level_3: {} }, footer: { links: {} }, content: {} };
+      
+      const getVal = (id) => $('#text_' + id.replace(/\./g, '_')).val();
+      
+      ['primary','secondary','success','danger','warning','info'].forEach(k => colors.palette[k] = getVal('palette.'+k));
+      
+      ['bg','text'].forEach(k => colors.header[k] = getVal('header.'+k));
+      ['bg','text','hover_bg','hover_text'].forEach(k => colors.header.buttons[k] = getVal('header.buttons.'+k));
+      
+      ['bg','text','hover_bg','hover_text','active_bg','active_text'].forEach(k => {
+          colors.sidebar.level_1[k] = getVal('sidebar.level_1.'+k);
+          colors.sidebar.level_2[k] = getVal('sidebar.level_2.'+k) || getVal('sidebar.level_1.'+k); // fallback
+          colors.sidebar.level_3[k] = getVal('sidebar.level_2.'+k) || getVal('sidebar.level_1.'+k);
+      });
+      
+      ['bg','text'].forEach(k => colors.footer[k] = '#ffffff'); // Hardcoded defaults for unexposed fields if any
+      ['text','hover_text'].forEach(k => colors.footer.links[k] = '#000000');
+      
+      ['page_bg','surface_bg','text_primary','text_muted','border_color','input_bg'].forEach(k => colors.content[k] = getVal('content.'+k));
+      
+      let theme_id = enName ? enName.toLowerCase().replace(/\s+/g, '_') : 'custom_theme';
+      
+      let fullTheme = {
+          "theme_id": theme_id,
+          "theme_mode": "Light",
+          "theme_name_ar": arName || "",
+          "theme_name_en": enName || "",
+          "theme_desc_ar": "ثيم مخصص",
+          "theme_desc_en": "Custom Theme",
+          "typography": {
+              "font_name": "Cairo",
+              "font_family": "'Cairo', sans-serif",
+              "font_url": "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
+          },
+          "colors": colors
+      };
+
+      return JSON.stringify(fullTheme);
+  }
+
+  function saveNewTheme() {
+      if (settingsAllThemes.length >= 12) {
+          alert('الحد الأقصى للثيمات المحفوظة هو 12 ثيماً. يرجى حذف أحد الثيمات المحفوظة أولاً.');
+          return;
+      }
+      let arName = $('#newThemeAr').val().trim();
+      let enName = $('#newThemeEn').val().trim();
+      
+      if(!arName || !enName) return;
+      
+      // Frontend Duplicate Check
+      let isDupAr = settingsAllThemes.some(t => t.theme_name_ar === arName);
+      let isDupEn = settingsAllThemes.some(t => t.theme_name_en && t.theme_name_en.toLowerCase() === enName.toLowerCase());
+      
+      if (isDupEn) { alert('عفواً، الاسم الإنجليزي موجود مسبقاً.'); return; }
+      if (isDupAr) { alert('عفواً، الاسم العربي موجود مسبقاً.'); return; }
+      
+      let btn = $('#saveThemeBtn');
+      btn.prop('disabled', true);
+      
+      let formData = new FormData();
+      formData.append('theme_name_ar', arName);
+      formData.append('theme_name_en', enName);
+      formData.append('theme_data', getFormColorsJson(arName, enName));
+      
+      fetch('/api/method/exa_theme.api.add_madar_theme', {
+          method: 'POST',
+          headers: {'X-Frappe-CSRF-Token': frappe.csrf_token},
+          body: formData
+      })
+      .then(res => res.json())
+      .then(r => {
+          if(r.message) {
+              alert('تم حفظ الثيم بنجاح!');
+              $('#newThemeAr').val('');
+              $('#newThemeEn').val('');
+              btn.prop('disabled', true);
+              loadSettingsThemes();
+          } else if (r.exc) {
+              let excObj = JSON.parse(r.exc);
+              alert('خطأ: ' + (excObj[0] || 'تعذر الحفظ'));
+              btn.prop('disabled', false);
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          alert('حدث خطأ أثناء الاتصال بالخادم.');
+          btn.prop('disabled', false);
+      });
+  }
+
+  function loadSettingsThemes() {
+      const url = `/api/method/frappe.client.get_list?doctype=Madar%20Theme&fields=["name","theme_id","theme_name_ar","theme_name_en","theme_data","is_default"]`;
+      fetch(url)
+          .then(res => res.json())
+          .then(r => {
+              if(r.message) {
+                  settingsAllThemes = r.message;
+                  renderThemes('');
+              }
+          });
+  }
+
+  function renderThemes(searchQuery) {
+      let grid = $('#themeCardsGrid');
+      grid.empty();
+      
+      let q = (searchQuery || "").toLowerCase();
+      let filtered = settingsAllThemes.filter(t => 
+          (t.theme_name_ar && t.theme_name_ar.toLowerCase().includes(q)) || 
+          (t.theme_name_en && t.theme_name_en.toLowerCase().includes(q))
+      );
+      
+      if(filtered.length === 0) {
+          grid.html('<div style="text-align: center; width: 100%; color: #888; padding: 20px;">لا توجد ثيمات مطابقة.</div>');
+          return;
+      }
+      
+      filtered.forEach(t => {
+          let defaultBadge = t.is_default ? '<span class="badge badge-success" style="font-size:10px; margin-right:5px;">افتراضي</span>' : '';
+          
+          let pColor = '#ccc';
+          let sColor = '#ccc';
+          let bg = '#fff';
+          try {
+              let cObj = JSON.parse(t.theme_data || '{}');
+              pColor = cObj.palette?.primary || '#ccc';
+              sColor = cObj.sidebar?.level_1?.bg || '#ccc';
+              bg = cObj.content?.page_bg || '#fff';
+          } catch(e) {}
+          
+          let card = `
+              <div class="theme-card">
+                  <div class="theme-card-info">
+                      <div class="theme-preview-dots">
+                          <div class="theme-dot" style="background-color: ${pColor};"></div>
+                          <div class="theme-dot" style="background-color: ${sColor};"></div>
+                          <div class="theme-dot" style="background-color: ${bg};"></div>
+                      </div>
+                      <div>
+                          <div class="theme-card-title">${t.theme_name_ar} ${defaultBadge}</div>
+                          <div class="theme-card-sub">${t.theme_name_en}</div>
+                      </div>
+                  </div>
+                  <div class="theme-card-actions">
+                      <button class="btn btn-sm btn-link" style="color:#555;" title="تعديل (تحميل في النماذج)" onclick="loadThemeToEdit('${t.name}')">
+                          <i class="fas fa-upload"></i> تحميل
+                      </button>
+                      <button class="btn btn-sm btn-link text-danger" title="حذف" onclick="deleteSettingsTheme('${t.name}')">
+                          <i class="fas fa-trash"></i>
+                      </button>
+                  </div>
+              </div>
+          `;
+          grid.append(card);
+      });
+  }
+
+  window.loadThemeToEdit = function(themeId) {
+      let t = settingsAllThemes.find(x => x.name === themeId);
+      if(!t) return;
+      
+      $('#newThemeAr').val(t.theme_name_ar);
+      $('#newThemeEn').val(t.theme_name_en);
+      
+      if(t.theme_data) {
+          try {
+              let cObj = JSON.parse(t.theme_data);
+              applyThemeJsonToForm(cObj);
+          } catch(e){}
+      }
+      
+      // Change Save button to Edit logic
+      $('#saveThemeBtn').html('<i class="fas fa-edit"></i> تحديث الثيم').off('click').click(() => updateExistingTheme(themeId));
+      window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  function updateExistingTheme(themeId) {
+      let arName = $('#newThemeAr').val().trim();
+      let enName = $('#newThemeEn').val().trim();
+      
+      let isDupAr = settingsAllThemes.some(t => t.theme_name_ar === arName && t.name !== themeId);
+      let isDupEn = settingsAllThemes.some(t => t.theme_name_en && t.theme_name_en.toLowerCase() === enName.toLowerCase() && t.name !== themeId);
+      
+      if (isDupAr) { alert('عفواً، الاسم العربي موجود مسبقاً لثيم آخر.'); return; }
+      if (isDupEn) { alert('عفواً، الاسم الإنجليزي موجود مسبقاً لثيم آخر.'); return; }
+      
+      let btn = $('#saveThemeBtn');
+      btn.prop('disabled', true);
+      
+      let formData = new FormData();
+      formData.append('theme_name', themeId);
+      formData.append('theme_name_ar', arName);
+      formData.append('theme_name_en', enName);
+      formData.append('theme_data', getFormColorsJson(arName, enName));
+      
+      fetch('/api/method/exa_theme.api.edit_madar_theme', {
+          method: 'POST',
+          headers: {'X-Frappe-CSRF-Token': frappe.csrf_token},
+          body: formData
+      })
+      .then(res => res.json())
+      .then(r => {
+          if(r.message) {
+              alert('تم تحديث الثيم بنجاح!');
+              // Reset to Add mode
+              $('#saveThemeBtn').html('<i class="fas fa-save"></i> حفظ الثيم').off('click').click(saveNewTheme);
+              $('#newThemeEn').val('');
+              $('#newThemeAr').val('');
+              loadSettingsThemes();
+          } else if (r.exc) {
+              let excObj = JSON.parse(r.exc);
+              alert('خطأ: ' + (excObj[0] || 'تعذر التحديث'));
+              btn.prop('disabled', false);
+          }
+      })
+      .catch(err => { console.error(err); btn.prop('disabled', false); });
+  }
+
+  window.deleteSettingsTheme = function(themeId) {
+      if(confirm('هل أنت متأكد من رغبتك بحذف هذا الثيم؟')) {
+          let formData = new FormData();
+          formData.append('theme_name', themeId);
+          fetch('/api/method/exa_theme.api.delete_madar_theme', {
+              method: 'POST',
+              headers: {'X-Frappe-CSRF-Token': frappe.csrf_token},
+              body: formData
+          })
+          .then(res => res.json())
+          .then(r => {
+              if(r.message) {
+                  alert('تم الحذف');
+                  loadSettingsThemes();
+              } else if (r.exc) {
+                  let excObj = JSON.parse(r.exc);
+                  alert('خطأ: ' + (excObj[0] || 'تعذر الحذف'));
+              }
+          });
+      }
+  }
+
+  
+  $('#openPreviewBtn').click(function() {
+      $('#previewModal').css('display', 'flex');
+  });
+  window.closePreviewModal = function() {
+      $('#previewModal').css('display', 'none');
+  }
+
+  window.closeEditThemeModal = function() {
+      $('#editThemeModal').css('display', 'none');
+  }
+</script>
+
+<!-- Preview Modal -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal-box" style="width: 800px; max-width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h4 style="margin:0; font-weight:bold;"><i class="fas fa-eye"></i> المعاينة الحية للثيم</h4>
+          <button style="background:none; border:none; font-size:24px; cursor:pointer;" onclick="closePreviewModal()">&times;</button>
+      </div>
+      <div class="mockup-container" id="mockContainer" style="height: 500px;">
+          <div class="mock-sidebar" id="mockSidebar">
+              <div class="mock-logo" id="mockLogo">مـدار</div>
+              <div class="mock-menu-item active-menu" id="mockMenu1"><i class="fas fa-home"></i><br>الرئيسية</div>
+              <div class="mock-menu-item" id="mockMenu2"><i class="fas fa-users"></i><br>العملاء</div>
+              <div class="mock-menu-item" id="mockMenu3" style="background:var(--mock-level2-bg, #fafafa); color:var(--mock-level2-text, #6c757d);"><i class="fas fa-box"></i><br>المنتجات</div>
+          </div>
+          <div class="mock-main">
+              <div class="mock-header" id="mockHeader">
+                  <div class="mock-header-btn" id="mockHeaderBtn"><i class="fas fa-search"></i> بحث</div>
+                  <div class="mock-header-btn" id="mockHeaderBtn2">أحمد</div>
+              </div>
+              <div class="mock-content" id="mockContent">
+                  <div class="mock-title" id="mockTitle">لوحة القيادة</div>
+                  <div class="mock-card" id="mockCard">
+                      <div class="mock-title" id="mockCardTitle" style="font-size:14px;">إحصائيات المبيعات</div>
+                      <div class="mock-text" id="mockText">نص تجريبي لعرض كيف سيبدو شكل النصوص داخل البطاقات في النظام.</div>
+                      <button class="mock-btn-primary" id="mockBtnPrimary">حفظ</button>
+                      <button class="mock-btn-secondary" id="mockBtnSecondary">إلغاء</button>
+                  </div>
+                  
+                  <div class="mock-card" id="mockCard2">
+                      <div class="mock-title" id="mockCardTitle2" style="font-size:14px;">تنبيه</div>
+                      <div class="mock-text" id="mockText2">هذه رسالة تحذير أو خطأ.</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
