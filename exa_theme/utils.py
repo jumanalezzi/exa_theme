@@ -1,6 +1,5 @@
 import io
 import base64
-import qrcode
 import frappe
 
 def get_tlv(tag, value):
@@ -12,6 +11,10 @@ def get_tlv(tag, value):
 def get_zatca_qr_code(doc):
     """Generate ZATCA compliant Phase 1 & 2 TLV QR Code as a base64 PNG data URI"""
     try:
+        # Imported here: this module is loaded as a jinja hook for every web page,
+        # so a missing qrcode package must only blank the QR code, not break the site
+        import qrcode
+
         company_name = getattr(doc, 'company', '') or frappe.defaults.get_user_default("Company") or ""
         company_tax_id = frappe.db.get_value('Company', company_name, 'tax_id') or getattr(doc, 'company_tax_id', '') or ''
         
