@@ -1,0 +1,64 @@
+<!-- <html> -->
+<div class="fotarh-dashboard-layout" style="padding: 15px 20px;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-brand-header mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <!-- Titles -->
+        <div class="dashboard-title-section">
+            <h3 class="mb-1 fw-bold" style="color: var(--text-color);">{{ _("Home Page") }}</h3>
+            <p class="text-muted mb-0" style="color: var(--text-muted) !important; font-size: 0.9rem;">{{ _("Analytical Dashboard") }}</p>
+        </div>
+
+        <!-- Global Filters & Actions -->
+        <div class="dashboard-actions d-flex flex-wrap align-items-center gap-2">
+            <!-- Company Filter -->
+            <div class="filter-group">
+                <select class="form-select form-select-sm border-0 shadow-sm" style="background-color: var(--fg-color); color: var(--text-color); min-width: 150px; border-radius: 8px;">
+                    <option value="">{{ _("All Companies") }}</option>
+                    {% for company in frappe.get_list("Company", fields=["name"]) %}
+                    <option value="{{ company.name }}">{{ company.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Date Filter Dropdown -->
+            <div class="filter-group d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm border-0 shadow-sm" id="date-range-select" style="background-color: var(--fg-color); color: var(--text-color); min-width: 150px; border-radius: 8px;" onchange="toggleCustomDateInputs()">
+                    <option value="today">{{ _("Today") }}</option>
+                    <option value="this_week">{{ _("This Week") }}</option>
+                    <option value="this_month" selected>{{ _("This Month") }}</option>
+                    <option value="this_quarter">{{ _("This Quarter") }}</option>
+                    <option value="this_half">{{ _("This Half") }}</option>
+                    <option value="this_year">{{ _("This Year") }}</option>
+                    <option disabled>──────</option>
+                    <option value="last_day">{{ _("Yesterday") }}</option>
+                    <option value="last_week">{{ _("Last Week") }}</option>
+                    <option value="last_month">{{ _("Last Month") }}</option>
+                    <option value="last_quarter">{{ _("Last Quarter") }}</option>
+                    <option value="last_half">{{ _("Last Half") }}</option>
+                    <option value="last_year">{{ _("Last Year") }}</option>
+                </select>
+                
+
+            </div>
+            
+            <script>
+                function toggleCustomDateInputs() {
+                    const select = document.getElementById('date-range-select');
+                    const customInputs = document.getElementById('custom-date-inputs');
+                    if(select.value === 'custom') {
+                        customInputs.classList.remove('d-none');
+                        customInputs.classList.add('d-flex');
+                    } else {
+                        customInputs.classList.add('d-none');
+                        customInputs.classList.remove('d-flex');
+                    }
+                }
+            </script>
+        </div>
+    </div>
+    
+    <!-- Child content -->
+    <div class="dashboard-body">
+        {% block content %}{% endblock %}
+    </div>
+</div>

@@ -1,0 +1,306 @@
+<style>
+/* Nomo Dashboard Styles */
+.nomo-dashboard-wrapper {
+    background-color: var(--header-bg, #ffffff);
+    padding: 20px;
+    min-height: 100vh;
+}
+.nomo-dashboard-container {
+    background-color: var(--colors-content-base-bg, #f4f6f9);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nomo-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: 50px;
+    width: 100%;
+    gap: 40px;
+}
+
+/* Time Block */
+.nomo-time-block {
+    display: flex;
+    flex: 1; /* Takes 1 part of the width */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    color: var(--text-color, #333);
+    background-color: transparent;
+}
+.nomo-time-text {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+}
+.nomo-date-text {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+.nomo-social-icons {
+    display: flex;
+    gap: 15px;
+}
+.nomo-social-icons i {
+    font-size: 1.4rem;
+    padding: 10px;
+    border: 1px solid var(--text-color, #333);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.nomo-social-icons i:hover {
+    background-color: var(--primary, #0d6efd);
+    color: white;
+    border-color: var(--primary, #0d6efd);
+}
+
+/* Buttons Block */
+.nomo-buttons-block {
+    display: flex;
+    flex: 3; /* Takes 3 parts of the width */
+    gap: 20px;
+    align-items: stretch;
+}
+
+.nomo-btn-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: space-between;
+    flex: 1; /* Stretch to fill */
+}
+
+.nomo-btn-small {
+    background-color: var(--header-bg, #0b69a3);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15));
+    color: var(--header-text, white);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nomo-btn-large {
+    background-color: var(--header-bg, #0582ca);
+    color: var(--header-text, white);
+    border: none;
+    border-radius: 10px;
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.nomo-btn-huge {
+    background-color: var(--header-bg, #10597d);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+    color: var(--header-text, white);
+    border: none;
+    border-radius: 10px;
+    flex: 1.5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.nomo-btn-small:hover, .nomo-btn-large:hover, .nomo-btn-huge:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+    color: var(--header-text, white);
+}
+
+/* Favorites Grid */
+.nomo-favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.nomo-fav-card {
+    background-color: var(--fg-color, white);
+    border-radius: 15px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 160px;
+    color: var(--text-color);
+}
+.nomo-fav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+.nomo-fav-card i {
+    font-size: 3.5rem;
+    color: var(--text-color, #10597d);
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+.nomo-fav-card span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 992px) {
+    .nomo-top-section {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .nomo-buttons-block {
+        flex-direction: column;
+        width: 100%;
+    }
+    .nomo-btn-large, .nomo-btn-huge {
+        min-height: 120px;
+    }
+}
+</style>
+
+<div class="nomo-dashboard-wrapper">
+    <div class="nomo-dashboard-container">
+        <!-- Top Section -->
+        <div class="nomo-top-section">
+            
+            <!-- Action Buttons (Right in RTL -> first in DOM) -->
+            <div class="nomo-buttons-block">
+                <!-- POS Button (Rightmost) -->
+                <button class="nomo-btn-huge" onclick="document.getElementById('madar-pos-cart-icon') ? document.getElementById('madar-pos-cart-icon').click() : (window.history.pushState({ route: 'app/posapp' }, '', '/madar?route=app%2Fposapp'), MadarRouter.handleCurrentRoute())">
+                    نقطة البيع <i class="fa fa-shopping-cart"></i>
+                </button>
+                
+                <!-- Control Panel (Middle) -->
+                <button class="nomo-btn-large" onclick="window.history.pushState({ route: 'app/accounting' }, '', '/madar?route=app%2Faccounting'); MadarRouter.handleCurrentRoute();">
+                    لوحة التحكم
+                </button>
+                
+                <!-- Stacked Buttons (Leftmost) -->
+                <div class="nomo-btn-stacked">
+                    <button class="nomo-btn-small" style="opacity: 0.6; cursor: not-allowed;" onclick="return false;" title="قريباً">الإقرار الضريبي</button>
+                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/General Ledger' }, '', '/madar?route=query-report%2FGeneral%20Ledger'); MadarRouter.handleCurrentRoute();">دفتر الأستاذ العام</button>
+                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/Profit and Loss Statement' }, '', '/madar?route=query-report%2FProfit%20and%20Loss%20Statement'); MadarRouter.handleCurrentRoute();">الربح والخساره</button>
+                </div>
+            </div>
+            
+            <!-- Time & Social (Left in RTL -> last in DOM) -->
+            <div class="nomo-time-block">
+                <h1 class="nomo-time-text" id="nomo-time"></h1>
+                <p class="nomo-date-text" id="nomo-date"></p>
+                <div class="nomo-social-icons">
+                    <i class="fab fa-snapchat-ghost"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Favorites Section -->
+        <div class="nomo-favorites-section mt-5">
+            <div class="nomo-favorites-grid" id="nomoDashboardFavoritesContainer">
+                <!-- Loaded dynamically by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Time formatting
+function updateNomoTime() {
+    const timeEl = document.getElementById('nomo-time');
+    const dateEl = document.getElementById('nomo-date');
+    if (!timeEl || !dateEl) return;
+    
+    const now = new Date();
+    const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+    timeEl.textContent = now.toLocaleTimeString('ar-EG', timeOptions);
+    
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+    dateEl.textContent = now.toLocaleDateString('ar-EG', dateOptions);
+}
+setInterval(updateNomoTime, 1000);
+updateNomoTime();
+
+// Favorites Loading
+function loadNomoFavorites() {
+    const container = document.getElementById('nomoDashboardFavoritesContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const favCheckboxes = document.querySelectorAll('.sidebar-fav-checkbox:checked');
+    
+    if (favCheckboxes.length === 0) {
+        container.innerHTML = '<div class="w-100 text-center p-4 text-muted">لا توجد عناصر في المفضلة</div>';
+        return;
+    }
+    
+    favCheckboxes.forEach(cb => {
+        const linkEl = cb.closest('a');
+        if (!linkEl) return;
+        
+        let label = '';
+        const labelEl = linkEl.querySelector('.menu-label');
+        if (labelEl) label = labelEl.textContent;
+        
+        let iconClass = '';
+        const iconEl = linkEl.querySelector('.menu-icon');
+        if (iconEl) iconClass = iconEl.className;
+        
+        const route = linkEl.getAttribute('data-route');
+        
+        const card = document.createElement('div');
+        card.className = 'nomo-fav-card';
+        card.onclick = () => {
+            window.history.pushState({ route: route }, '', '/madar?route=' + encodeURIComponent(route));
+            if (window.MadarRouter) {
+                window.MadarRouter.handleCurrentRoute();
+            }
+        };
+        
+        card.innerHTML = `
+            <i class="${iconClass}"></i>
+            <span>${label}</span>
+        `;
+        container.appendChild(card);
+    });
+}
+// Run on load
+setTimeout(loadNomoFavorites, 500);
+
+// Also listen for changes in favorites from the sidebar
+window.nomoFavListener = function(e) {
+    if (e.target && e.target.classList.contains('sidebar-fav-checkbox')) {
+        loadNomoFavorites();
+    }
+};
+document.removeEventListener('change', window.nomoFavListener);
+document.addEventListener('change', window.nomoFavListener);
+</script>

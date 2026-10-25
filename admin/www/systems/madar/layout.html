@@ -1,0 +1,50 @@
+<!-- <html> -->
+<div class="fotarh-dashboard-layout" style="padding: 15px 20px;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-brand-header mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <!-- Titles -->
+        <div class="dashboard-title-section">
+            <h3 class="mb-1 fw-bold" style="color: var(--text-color);">{{ _("Home Page") }}</h3>
+            <p class="text-muted mb-0" style="color: var(--text-muted) !important; font-size: 0.9rem;">{{ _("Analytical Dashboard") }}</p>
+        </div>
+
+        <!-- Global Filters & Actions -->
+        <div class="dashboard-actions d-flex flex-wrap align-items-center gap-2">
+            <!-- Company Filter -->
+            <div class="filter-group">
+                <select class="form-select form-select-sm border-0 shadow-sm" style="background-color: var(--fg-color); color: var(--text-color); min-width: 150px; border-radius: 8px;">
+                    <option value="">{{ _("All Companies") }}</option>
+                    {% for company in frappe.get_list("Company", fields=["name"]) %}
+                    <option value="{{ company.name }}">{{ company.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Date Filter (Dropdown based) -->
+            <div class="filter-group dropdown">
+                <button class="btn btn-sm shadow-sm d-flex justify-content-between align-items-center w-100" type="button" id="dateFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--fg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px; min-width: 160px; text-align: right;">
+                    <span id="selectedDateRangeText">{{ _("This Month") }}</span>
+                    <i class="fa fa-chevron-down ms-2 text-muted" style="font-size: 0.75rem;"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="dateFilterDropdown" style="background-color: var(--fg-color); border-radius: 8px; min-width: 160px;">
+                    <li><a class="dropdown-item date-filter-item active" href="#" data-value="this_month" style="color: var(--text-color);">{{ _("This Month") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="last_month" style="color: var(--text-color);">{{ _("Last Month") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="this_quarter" style="color: var(--text-color);">{{ _("This Quarter") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="last_quarter" style="color: var(--text-color);">{{ _("Last Quarter") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="this_half" style="color: var(--text-color);">{{ _("This Half") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="last_half" style="color: var(--text-color);">{{ _("Last Half") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="this_year" style="color: var(--text-color);">{{ _("This Year") }}</a></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="last_year" style="color: var(--text-color);">{{ _("Last Year") }}</a></li>
+                    <li><hr class="dropdown-divider" style="border-color: var(--border-color);"></li>
+                    <li><a class="dropdown-item date-filter-item" href="#" data-value="custom" style="color: var(--text-color);"><i class="fa fa-calendar-alt me-2 text-muted"></i> {{ _("Custom Range") }}</a></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Child content -->
+    <div class="dashboard-body">
+        {% block content %}{% endblock %}
+    </div>
+</div>

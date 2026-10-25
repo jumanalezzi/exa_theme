@@ -1,0 +1,1072 @@
+
+<style>
+    /* CSS Variables for theme */
+    :root {
+        --madar-primary: #463D7B;
+        --madar-secondary: #f4f6f9;
+        --madar-border: #e0e0e0;
+        --madar-text: #333;
+        --madar-hover: #f8f9fa;
+        --madar-active: #e9ecef;
+    }
+
+    .menu-settings-container {
+        padding: 20px;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .menu-header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        position: sticky;
+        top: 15px;
+        z-index: 100;
+    }
+
+    .menu-header-bar h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: var(--madar-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-madar-primary {
+        background: var(--madar-primary);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+    .btn-madar-primary:hover {
+        background: #3a3266;
+    }
+    .btn-madar-primary:disabled {
+        background: #a5a0c2;
+        cursor: not-allowed;
+    }
+
+    .btn-madar-outline {
+        background: transparent;
+        color: var(--madar-primary);
+        border: 1px solid var(--madar-primary);
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+    .btn-madar-outline:hover {
+        background: var(--madar-hover);
+    }
+    .btn-madar-outline:disabled {
+        color: #a5a0c2;
+        border-color: #a5a0c2;
+        cursor: not-allowed;
+        background: transparent;
+    }
+
+    .btn-madar-danger {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .tree-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        min-height: 400px;
+    }
+
+    .sortable-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .sortable-list.level-1 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+    .sortable-list.level-2, .sortable-list.level-3 {
+        padding-inline-start: 30px;
+        margin-top: 10px;
+        border-inline-start: 2px dashed var(--madar-border);
+    }
+
+    .menu-item-block {
+        background: var(--madar-secondary);
+        border: 1px solid var(--madar-border);
+        border-radius: 6px;
+        margin-bottom: 10px;
+        padding: 10px;
+        transition: 0.2s;
+    }
+    .menu-item-block.ghost {
+        opacity: 0.4;
+        background: #e2e8f0;
+    }
+
+    .menu-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .item-main-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .drag-handle {
+        cursor: grab;
+        color: #999;
+        font-size: 1.2rem;
+        padding: 5px;
+    }
+    .drag-handle:active {
+        cursor: grabbing;
+    }
+
+    .item-toggle {
+        cursor: pointer;
+        color: #666;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .item-number {
+        background: var(--madar-primary);
+        color: white;
+        font-size: 0.8rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .item-label {
+        font-weight: bold;
+        color: var(--madar-text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .item-label i {
+        color: var(--madar-primary);
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 5px;
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 8px;
+        border-top: 1px dashed var(--madar-border);
+        padding-top: 8px;
+    }
+
+    .action-icon {
+        cursor: pointer;
+        color: #666;
+        background: #fff;
+        border: 1px solid var(--madar-border);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .action-icon:hover {
+        background: var(--madar-hover);
+        color: var(--madar-primary);
+    }
+    .action-icon.delete:hover {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100000;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 500px;
+        max-width: 90%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--madar-border);
+        padding-bottom: 10px;
+    }
+    .modal-header h3 { margin: 0; }
+    .close-modal { cursor: pointer; font-size: 1.2rem; color: #666; }
+
+    .form-group { margin-bottom: 15px; position: relative; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--madar-border);
+        border-radius: 4px;
+    }
+
+    .ai-translate-btn {
+        font-size: 0.8rem;
+        color: var(--madar-primary);
+        cursor: pointer;
+        margin-top: 5px;
+        display: inline-block;
+    }
+    .ai-translate-btn i { margin-right: 4px; }
+    
+    .doctype-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--madar-border);
+        border-top: none;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+        display: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .doctype-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .doctype-item:hover { background: var(--madar-hover); }
+
+    .icon-picker-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid var(--madar-border);
+        border-radius: 4px;
+        display: none;
+    }
+    .icon-picker-grid.show-grid {
+        display: grid !important;
+    }
+    .icon-option {
+        text-align: center;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+    .icon-option:hover {
+        background: var(--madar-hover);
+        color: var(--madar-primary);
+    }
+    .icon-option.selected {
+        background: var(--madar-primary);
+        color: #fff;
+    }
+
+    .tabs-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--madar-border);
+    }
+    .tab-btn {
+        padding: 8px 16px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+    }
+    .tab-btn.active {
+        color: var(--madar-primary);
+        border-bottom-color: var(--madar-primary);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+</style>
+
+<script src="/assets/admin/js/sortable.min.js"></script>
+
+<div class="menu-settings-container">
+    <div class="menu-header-bar">
+        <h2><i class="fas fa-list-ul"></i> {{ _("Menus Settings") }}</h2>
+        <div class="header-actions">
+            <button class="btn-madar-outline" id="btnRestoreDefault" disabled>
+                <i class="fas fa-undo"></i> {{ _("Restore Default") }}
+            </button>
+            <button class="btn-madar-outline" id="btnAddMainLevel">
+                <i class="fas fa-plus"></i> {{ _("Add Main Button") }}
+            </button>
+            <button class="btn-madar-primary" id="btnSaveMenu" disabled>
+                <i class="fas fa-save"></i> {{ _("Save Menu") }}
+            </button>
+        </div>
+    </div>
+
+    <div class="tree-container">
+        <div id="homeMenuContainer"></div>
+        <div id="posMenuContainer"></div>
+        <ul id="mainMenuTree" class="sortable-list level-1">
+            <div class="empty-state"><i class="fas fa-spinner fa-spin"></i> {{ _("Loading...") }}</div>
+        </ul>
+    </div>
+</div>
+
+<!-- Item Modal -->
+<div class="modal-overlay" id="itemModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">{{ _("Add Item") }}</h3>
+            <span class="close-modal" onclick="closeItemModal()"><i class="fas fa-times"></i></span>
+        </div>
+        
+        <div class="tabs-container" id="typeTabs">
+            <button class="tab-btn active" data-type="folder"><i class="fas fa-folder"></i> {{ _("Folder (Dropdown)") }}</button>
+            <button class="tab-btn" data-type="link"><i class="fas fa-link"></i> {{ _("Link") }}</button>
+        </div>
+
+        <input type="hidden" id="itemEditId">
+        <input type="hidden" id="itemParentId">
+        
+        <div class="form-group">
+            <label>{{ _("Arabic Name") }}</label>
+            <input type="text" id="itemLabelAr" class="form-control" autocomplete="off">
+            <span class="ai-translate-btn" onclick="translateWithAi('ar')"><i class="fas fa-magic"></i> {{ _("Translate to English with AI") }}</span>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _("English Name") }}</label>
+            <input type="text" id="itemLabelEn" class="form-control" autocomplete="off">
+            <span class="ai-translate-btn" onclick="translateWithAi('en')"><i class="fas fa-magic"></i> {{ _("Translate to Arabic with AI") }}</span>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _("Icon") }}</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div id="iconPreview" style="width: 40px; height: 38px; display: flex; align-items: center; justify-content: center; background: #f4f6f9; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 1.2rem; color: #463D7B;">
+                    <i class="fas fa-icons"></i>
+                </div>
+                <input type="text" id="itemIcon" class="form-control" readonly placeholder="{{ _('Click to select icon') }}" onclick="toggleIconPicker()" style="flex: 1; cursor: pointer;">
+            </div>
+            <div class="icon-picker-grid" id="iconPickerGrid"></div>
+        </div>
+
+        <div class="form-group" id="routeGroup" style="display: none;">
+            <label>{{ _("DocType Route") }}</label>
+            <input type="text" id="itemDocTypeSearch" class="form-control" placeholder="{{ _('Search DocType...') }}" autocomplete="off">
+            <div class="doctype-dropdown" id="doctypeDropdown"></div>
+            <input type="hidden" id="itemRoute">
+            <small style="color: #666; margin-top: 5px; display: block;">Route: <span id="routePreview"></span></small>
+        </div>
+
+        <div style="text-align: right; margin-top: 20px;">
+            <button class="btn-madar-primary" onclick="saveItemFromModal()">{{ _("Confirm") }}</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var currentMenuData = [];
+    var defaultMenuData = [];
+    var savedMenuData = [];
+    var sortables = [];
+    var lang = document.documentElement.lang || "ar";
+    var nextItemId = 1;
+
+    // Common Icons
+    var commonIcons = [
+        "fa fa-box", "fa fa-users", "fa fa-chart-line", "fa fa-cog", "fa fa-file-invoice",
+        "fa fa-shopping-cart", "fa fa-truck", "fa fa-wallet", "fa fa-building", "fa fa-calculator",
+        "fa fa-clipboard-list", "fa fa-folder", "fa fa-home", "fa fa-cogs", "fa fa-chart-pie",
+        "fa fa-calendar-alt", "fa fa-bell", "fa fa-address-book", "fa fa-tasks", "fa fa-store",
+        "fa fa-tools", "fa fa-shield-alt", "fa fa-key", "fa fa-lock", "fa fa-envelope",
+        "fa fa-file-alt", "fa fa-chart-bar", "fa fa-globe", "fa fa-briefcase", "fa fa-user-tie",
+        "fa fa-bullhorn", "fa fa-camera", "fa fa-comments", "fa fa-credit-card", "fa fa-database",
+        "fa fa-file-contract", "fa fa-handshake", "fa fa-heart", "fa fa-laptop", "fa fa-map-marker-alt",
+        "fa fa-paper-plane", "fa fa-print", "fa fa-search", "fa fa-star", "fa fa-tags",
+        "fa fa-university", "fa fa-warehouse", "fa fa-wrench", "fa fa-book", "fa fa-car"
+    ];
+
+    $(document).ready(function() {
+        // Move modal to body to escape any parent stacking context
+        $('body').append($('#itemModal'));
+
+        initIconPicker();
+        fetchMenuData();
+
+        $('#btnAddMainLevel').click(() => openModal('add', null, 1));
+        $('#btnSaveMenu').click(saveMenuToServer);
+        $('#btnRestoreDefault').click(restoreDefaultMenu);
+
+        // DocType Search with Debounce
+        let searchTimeout;
+        $('#itemDocTypeSearch').on('input', function() {
+            clearTimeout(searchTimeout);
+            let val = $(this).val();
+            if(val.length < 2) {
+                $('#doctypeDropdown').hide();
+                return;
+            }
+            searchTimeout = setTimeout(() => {
+                let fd = new FormData();
+                fd.append('txt', val);
+                fetch('/api/method/admin.api.search_doctypes_for_menu', {
+                    method: 'POST',
+                    headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''},
+                    body: fd
+                })
+                .then(res => res.json())
+                .then(r => {
+                    let html = '';
+                    if(r.message && r.message.length > 0) {
+                        r.message.forEach(d => {
+                            let displayName = d.name;
+                            if (d.translated_name && d.translated_name !== d.name) {
+                                displayName = `${d.translated_name} (${d.name})`;
+                            }
+                            html += `<div class="doctype-item" data-name="${d.name}">
+                                <strong>${displayName}</strong> <small>(${d.module})</small>
+                            </div>`;
+                        });
+                        $('#doctypeDropdown').html(html).show();
+                    } else {
+                        $('#doctypeDropdown').html('<div class="doctype-item">No results</div>').show();
+                    }
+                })
+                .catch(err => console.error(err));
+            }, 300);
+        });
+
+        $(document).on('click', '.doctype-item', function() {
+            if($(this).data('name')) {
+                let dtName = $(this).data('name');
+                $('#itemDocTypeSearch').val(dtName);
+                
+                // Construct Route (Frappe style: app/doctype-name)
+                let routeName = dtName.toLowerCase().replace(/ /g, '-');
+                let route = `app/${routeName}`;
+                $('#itemRoute').val(route);
+                $('#routePreview').text(route);
+                
+                $('#doctypeDropdown').hide();
+            }
+        });
+
+        // Hide dropdowns on outside click
+        $(document).on('click', function(e) {
+            if(!$(e.target).closest('#routeGroup').length) {
+                $('#doctypeDropdown').hide();
+            }
+            if(!$(e.target).closest('#itemIcon').length && !$(e.target).closest('#iconPickerGrid').length) {
+                $('#iconPickerGrid').hide();
+            }
+        });
+
+        // Tab Switching
+        $('.tab-btn').click(function() {
+            $('.tab-btn').removeClass('active');
+            $(this).addClass('active');
+            if($(this).data('type') === 'link') {
+                $('#routeGroup').show();
+            } else {
+                $('#routeGroup').hide();
+            }
+        });
+        
+        // Prevent accidental navigation
+        window.onbeforeunload = function() {
+            if(!$('#btnSaveMenu').prop('disabled')) {
+                return "You have unsaved changes. Are you sure you want to leave?";
+            }
+        };
+    });
+
+    function initIconPicker() {
+        let html = '';
+        commonIcons.forEach(icon => {
+            html += `<div class="icon-option" onclick="selectIcon('${icon}', event)"><i class="${icon}"></i></div>`;
+        });
+        $('#iconPickerGrid').html(html);
+    }
+
+    function toggleIconPicker() {
+        $('#iconPickerGrid').toggleClass('show-grid');
+    }
+
+    function selectIcon(icon, event) {
+        $('#itemIcon').val(icon);
+        $('#iconPreview').html(`<i class="${icon}"></i>`);
+        $('#iconPickerGrid').removeClass('show-grid');
+        $('.icon-option').removeClass('selected');
+        event.currentTarget.classList.add('selected');
+    }
+
+    function fetchMenuData() {
+        fetch('/api/method/admin.api.get_user_preferences_api', {
+            method: 'POST',
+            headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''}
+        })
+        .then(res => res.json())
+        .then(r => {
+            if(r.message) {
+                let pref = r.message;
+                let customJson = pref.custom_menu_json;
+                let currentSys = pref.current_system;
+                
+                // Fetch default menu json using frappe.client.get_value via fetch
+                let fd = new FormData();
+                fd.append('doctype', 'Madar System');
+                fd.append('filters', JSON.stringify({name: currentSys}));
+                fd.append('fieldname', 'default_menu_json');
+                
+                fetch('/api/method/frappe.client.get_value', {
+                    method: 'POST',
+                    headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''},
+                    body: fd
+                })
+                .then(res => res.json())
+                .then(sysRes => {
+                    defaultMenuData = sysRes.message.default_menu_json ? JSON.parse(sysRes.message.default_menu_json) : [];
+                    
+                    if(customJson && Array.isArray(customJson) && customJson.length > 0) {
+                        savedMenuData = JSON.parse(JSON.stringify(customJson));
+                    } else {
+                        savedMenuData = JSON.parse(JSON.stringify(defaultMenuData));
+                    }
+                    currentMenuData = JSON.parse(JSON.stringify(savedMenuData));
+                    
+                    assignIdsToMenu(currentMenuData);
+                    renderTree();
+                    checkDifferences();
+
+                    // Update Sidebar Dynamically
+                    if(window.user_pref_context) {
+                        window.user_pref_context.custom_menu_json = JSON.parse(JSON.stringify(savedMenuData));
+                        let sidebarObj = window.MadarSidebar || (typeof MadarSidebar !== 'undefined' ? MadarSidebar : null);
+                        console.log("Updating sidebar. sidebarObj found:", !!sidebarObj);
+                        if (sidebarObj && typeof sidebarObj.buildTreeHtml === 'function') {
+                            setTimeout(() => { 
+                                sidebarObj.buildTreeHtml(); 
+                                if (window.MadarRouter && typeof window.MadarRouter.bindMenuClickEvents === 'function') {
+                                    window.MadarRouter.bindMenuClickEvents();
+                                }
+                            }, 50);
+                        } else {
+                            console.error("MadarSidebar object not found! Check caching of madar-sidebar.js");
+                        }
+                    }
+                }).catch(err => console.error(err));
+            }
+        })
+        .catch(err => console.error(err));
+    }
+
+    function assignIdsToMenu(items) {
+        items.forEach(item => {
+            item._id = 'item_' + nextItemId++;
+            if(item.children) assignIdsToMenu(item.children);
+        });
+    }
+
+    function renderTree() {
+        let container = $('#mainMenuTree');
+        container.empty();
+        $('#homeMenuContainer').empty();
+        $('#posMenuContainer').empty();
+
+        let hasOtherItems = false;
+        if(currentMenuData.length === 0) {
+            container.html(`<div class="empty-state">القائمة فارغة. أضف زراً رئيسياً للبدء.</div>`);
+        } else {
+            let orderIndex = 1;
+            currentMenuData.forEach((item) => {
+                let isHome = (item.route === 'app/home' || item.label_en === 'Home' || item.label_ar === 'الرئيسية');
+                let isPos = (item.route === 'app/posapp' || item.route === 'app/pos-awesome' || item.label_en === 'POS Awesome' || item.label_ar === 'نقاط البيع');
+                if(isHome) {
+                    let homeHtml = `<div class="menu-item-block" style="background:#f1f5f9; cursor:default; margin-bottom:20px; border-radius: 8px; border: 1px solid #e2e8f0; pointer-events: none;">
+                        <div class="item-content" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <div class="item-details" style="display:flex; align-items:center; gap:10px;">
+                                <i class="${item.icon || 'fas fa-home'}" style="color:#64748b; font-size:18px;"></i>
+                                <strong style="color:#334155; font-size:16px;">${lang === 'ar' ? item.label_ar : item.label_en}</strong>
+                                <span class="badge" style="background:#e2e8f0; color:#475569; padding:4px 8px; border-radius:4px; font-size:12px;">أساسي (ثابت)</span>
+                            </div>
+                        </div>
+                    </div>`;
+                    $('#homeMenuContainer').html(homeHtml);
+                } else if(isPos) {
+                    let posHtml = `<div class="menu-item-block" style="background:#f1f5f9; cursor:default; margin-bottom:20px; border-radius: 8px; border: 1px solid #e2e8f0; pointer-events: none;">
+                        <div class="item-content" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <div class="item-details" style="display:flex; align-items:center; gap:10px;">
+                                <i class="${item.icon || 'fas fa-cash-register'}" style="color:#64748b; font-size:18px;"></i>
+                                <strong style="color:#334155; font-size:16px;">${lang === 'ar' ? item.label_ar : item.label_en}</strong>
+                                <span class="badge" style="background:#e2e8f0; color:#475569; padding:4px 8px; border-radius:4px; font-size:12px;">أساسي (ثابت)</span>
+                            </div>
+                        </div>
+                    </div>`;
+                    $('#posMenuContainer').html(posHtml);
+                } else {
+                    container.append(buildNodeHtml(item, orderIndex++, 1));
+                    hasOtherItems = true;
+                }
+            });
+            if(!hasOtherItems) {
+                container.html(`<div class="empty-state">القائمة فارغة. أضف زراً رئيسياً للبدء.</div>`);
+            }
+        }
+        initSortables();
+    }
+
+    function buildNodeHtml(item, order, level) {
+        let label = lang === 'ar' ? item.label_ar : item.label_en;
+        let icon = item.icon || (item.type === 'folder' ? 'fas fa-folder' : 'fas fa-link');
+        let childrenHtml = '';
+        
+        if(item.type === 'folder') {
+            childrenHtml = `<ul class="sortable-list level-${level+1}" data-parent-id="${item._id}" data-level="${level+1}" style="display:none;">`;
+            if(item.children && item.children.length > 0) {
+                item.children.forEach((child, childIndex) => {
+                    childrenHtml += buildNodeHtml(child, childIndex + 1, level + 1);
+                });
+            }
+            childrenHtml += `</ul>`;
+        }
+
+        let toggleHtml = item.type === 'folder' ? `<div class="item-toggle" onclick="toggleChildren('${item._id}')"><i class="fas fa-chevron-down"></i></div>` : `<div style="width:20px;"></div>`;
+        
+        let actionAddHtml = '';
+        if(item.type === 'folder' && level < 3) {
+            actionAddHtml = `<div class="action-icon" onclick="openModal('add', '${item._id}', ${level+1})" title="{{ _('Add Child') }}"><i class="fas fa-plus"></i> ${level==1? '{{ _("Add Submenu") }}' : '{{ _("Add Link") }}'}</div>`;
+        }
+
+        return `
+            <li class="menu-node" data-id="${item._id}">
+                <div class="menu-item-block">
+                    <div class="menu-item-header">
+                        <div class="item-main-info">
+                            <i class="fas fa-grip-vertical drag-handle"></i>
+                            ${toggleHtml}
+                            <span class="item-number">${order}</span>
+                            <span class="item-label"><i class="${icon}"></i> ${label}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        ${actionAddHtml}
+                        <div class="action-icon" onclick="openModal('edit', '${item._id}', ${level})"><i class="fas fa-edit"></i> {{ _('Edit') }}</div>
+                        <div class="action-icon delete" onclick="deleteItem('${item._id}')"><i class="fas fa-trash"></i> {{ _('Delete') }}</div>
+                    </div>
+                </div>
+                ${childrenHtml}
+            </li>
+        `;
+    }
+
+    function initSortables() {
+        sortables.forEach(s => s.destroy());
+        sortables = [];
+
+        let lists = document.querySelectorAll('.sortable-list');
+        lists.forEach(listEl => {
+            let level = $(listEl).hasClass('level-1') ? 1 : ($(listEl).hasClass('level-2') ? 2 : 3);
+            let s = new Sortable(listEl, {
+                group: 'level-' + level, // Restrict to same level
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'ghost',
+                onEnd: function(evt) {
+                    rebuildDataFromDOM();
+                }
+            });
+            sortables.push(s);
+        });
+    }
+
+    function toggleChildren(itemId) {
+        let ul = $(`ul[data-parent-id="${itemId}"]`);
+        ul.slideToggle();
+    }
+
+    // Modal Logic
+    function openModal(mode, itemId, level) {
+        $('#itemLabelAr').val('');
+        $('#itemLabelEn').val('');
+        $('#itemIcon').val('fas fa-link');
+        $('#itemDocTypeSearch').val('');
+        $('#itemRoute').val('');
+        $('#routePreview').text('');
+        
+        if(mode === 'add') {
+            $('#modalTitle').text('{{ _("Add Item") }}');
+            $('#itemEditId').val('');
+            $('#itemParentId').val(itemId || '');
+            
+            if(level === 3) {
+                // Force Link
+                $('.tab-btn[data-type="link"]').click();
+                $('#typeTabs').hide();
+            } else {
+                $('.tab-btn[data-type="folder"]').click();
+                $('#typeTabs').show();
+            }
+        } else {
+            $('#modalTitle').text('{{ _("Edit Item") }}');
+            let item = findItemById(currentMenuData, itemId);
+            if(item) {
+                $('#itemEditId').val(itemId);
+                $('#itemLabelAr').val(item.label_ar);
+                $('#itemLabelEn').val(item.label_en);
+                $('#itemIcon').val(item.icon);
+                $('.tab-btn[data-type="'+item.type+'"]').click();
+                if(item.type === 'link') {
+                    $('#itemRoute').val(item.route);
+                    $('#routePreview').text(item.route);
+                }
+                // Cannot change type when editing
+                $('#typeTabs').hide();
+            }
+        }
+        
+        // Update Icon Preview
+        let currentIcon = $('#itemIcon').val();
+        if(currentIcon) {
+            $('#iconPreview').html(`<i class="${currentIcon}"></i>`);
+        } else {
+            $('#iconPreview').html(`<i class="fas fa-icons"></i>`);
+        }
+
+        
+        $('#itemModal').css('display', 'flex');
+    }
+
+    function closeItemModal() {
+        $('#itemModal').hide();
+    }
+
+    function saveItemFromModal() {
+        let ar = $('#itemLabelAr').val().trim();
+        let en = $('#itemLabelEn').val().trim();
+        let icon = $('#itemIcon').val().trim();
+        let type = $('.tab-btn.active').data('type');
+        let route = $('#itemRoute').val().trim();
+        
+        if(!ar || !en) {
+            alert('الرجاء إدخال الاسم بالعربي والإنجليزي');
+            return;
+        }
+        if(type === 'link' && !route) {
+            alert('الرجاء تحديد الدوكتايب للحصول على الرابط');
+            return;
+        }
+
+        let editId = $('#itemEditId').val();
+        
+        if(editId) {
+            // Edit existing
+            let item = findItemById(currentMenuData, editId);
+            item.label_ar = ar;
+            item.label_en = en;
+            item.icon = icon;
+            if(type === 'link') {
+                item.route = route;
+            }
+        } else {
+            // Add new
+            let parentId = $('#itemParentId').val();
+            let newItem = {
+                _id: 'item_' + nextItemId++,
+                label_ar: ar,
+                label_en: en,
+                type: type,
+                icon: icon
+            };
+            if(type === 'folder') newItem.children = [];
+            if(type === 'link') {
+                newItem.route = route;
+                newItem.view_type = 'frame';
+                newItem.path = '';
+                newItem.favorites = '0';
+            }
+
+            if(parentId) {
+                let parent = findItemById(currentMenuData, parentId);
+                if(parent && parent.children) {
+                    parent.children.push(newItem);
+                }
+            } else {
+                currentMenuData.push(newItem);
+            }
+        }
+
+        closeItemModal();
+        renderTree();
+        checkDifferences();
+    }
+
+    function deleteItem(itemId) {
+        if(confirm('سيتم حذف العنصر وجميع العناصر الفرعية داخله. هل أنت متأكد؟')) {
+            removeItemById(currentMenuData, itemId);
+            renderTree();
+            checkDifferences();
+        }
+    }
+
+    // Tree Helpers
+    function findItemById(arr, id) {
+        for(let i=0; i<arr.length; i++) {
+            if(arr[i]._id === id) return arr[i];
+            if(arr[i].children) {
+                let found = findItemById(arr[i].children, id);
+                if(found) return found;
+            }
+        }
+        return null;
+    }
+
+    function removeItemById(arr, id) {
+        for(let i=0; i<arr.length; i++) {
+            if(arr[i]._id === id) {
+                arr.splice(i, 1);
+                return true;
+            }
+            if(arr[i].children) {
+                let removed = removeItemById(arr[i].children, id);
+                if(removed) return true;
+            }
+        }
+        return false;
+    }
+
+    function rebuildDataFromDOM() {
+        let newData = [];
+        let homeItem = currentMenuData.find(i => i.route === 'app/home' || i.label_en === 'Home' || i.label_ar === 'الرئيسية');
+        if(!homeItem) {
+            homeItem = savedMenuData.find(i => i.route === 'app/home' || i.label_en === 'Home' || i.label_ar === 'الرئيسية');
+        }
+        if(homeItem) {
+            newData.push(homeItem);
+        }
+
+        let posItem = currentMenuData.find(i => i.route === 'app/posapp' || i.route === 'app/pos-awesome' || i.label_en === 'POS Awesome' || i.label_ar === 'نقاط البيع');
+        if(!posItem) {
+            posItem = savedMenuData.find(i => i.route === 'app/posapp' || i.route === 'app/pos-awesome' || i.label_en === 'POS Awesome' || i.label_ar === 'نقاط البيع');
+        }
+        if(posItem) {
+            newData.push(posItem);
+        }
+
+        $('#mainMenuTree > li').each(function() {
+            newData.push(buildItemObjFromDOM(this));
+        });
+        currentMenuData = newData;
+        renderTree(); // re-render to fix numbering
+        checkDifferences();
+    }
+
+    function buildItemObjFromDOM(liEl) {
+        let id = $(liEl).data('id');
+        let oldItem = findItemById(currentMenuData, id);
+        let newItem = Object.assign({}, oldItem); // clone
+        
+        if(newItem.type === 'folder') {
+            newItem.children = [];
+            $(liEl).children('ul').children('li').each(function() {
+                newItem.children.push(buildItemObjFromDOM(this));
+            });
+        }
+        return newItem;
+    }
+
+    // State Tracking
+    function checkDifferences() {
+        // Remove _id before comparing
+        let cleanCurrent = cleanIds(JSON.parse(JSON.stringify(currentMenuData)));
+        let cleanSaved = cleanIds(JSON.parse(JSON.stringify(savedMenuData)));
+        let cleanDefault = cleanIds(JSON.parse(JSON.stringify(defaultMenuData)));
+
+        let isChangedFromSaved = JSON.stringify(cleanCurrent) !== JSON.stringify(cleanSaved);
+        let isChangedFromDefault = JSON.stringify(cleanCurrent) !== JSON.stringify(cleanDefault);
+
+        $('#btnSaveMenu').prop('disabled', !isChangedFromSaved);
+        $('#btnRestoreDefault').prop('disabled', !isChangedFromDefault);
+    }
+
+    function cleanIds(arr) {
+        arr.forEach(item => {
+            delete item._id;
+            if(item.children) cleanIds(item.children);
+        });
+        return arr;
+    }
+
+    // Save and Restore
+    function saveMenuToServer() {
+        let cleanData = cleanIds(JSON.parse(JSON.stringify(currentMenuData)));
+        
+        let fd = new FormData();
+        fd.append('field', 'custom_menu_json');
+        fd.append('value', JSON.stringify(cleanData));
+        
+        $('#btnSaveMenu').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> {{ _("Saving...") }}');
+        
+        fetch('/api/method/admin.api.update_user_preference', {
+            method: 'POST',
+            headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''},
+            body: fd
+        })
+        .then(res => res.json())
+        .then(r => {
+            $('#btnSaveMenu').html('<i class="fas fa-save"></i> {{ _("Save Menu") }}');
+            if(r.message === 'success') {
+                if(window.frappe && typeof frappe.show_alert === 'function') frappe.show_alert({message: '{{ _("Saved successfully!") }}', indicator: 'green'});
+                else alert('{{ _("Saved successfully!") }}');
+                
+                fetchMenuData(); // Reload completely and update sidebar from server
+            } else if(r.exc) {
+                alert('{{ _("Error saving:") }} ' + JSON.parse(r.exc)[0]);
+            }
+        })
+        .catch(err => {
+            $('#btnSaveMenu').html('<i class="fas fa-save"></i> {{ _("Save Menu") }}');
+            console.error(err);
+        });
+    }
+
+    function restoreDefaultMenu() {
+        if(confirm('{{ _("Are you sure you want to restore the default menu? Any unsaved changes will be lost.") }}')) {
+            $('#btnRestoreDefault').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> {{ _("Restoring...") }}');
+            fetch('/api/method/admin.api.restore_default_menu', {
+                method: 'POST',
+                headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''}
+            })
+            .then(res => res.json())
+            .then(r => {
+                $('#btnRestoreDefault').html('<i class="fas fa-undo"></i> {{ _("Restore Default") }}');
+                if(r.message === 'success') {
+                    if(window.frappe && typeof frappe.show_alert === 'function') frappe.show_alert({message: '{{ _("Restored default menu successfully!") }}', indicator: 'green'});
+                    else alert('{{ _("Restored default menu successfully!") }}');
+                    
+                    fetchMenuData(); // Reload completely and update sidebar from server
+                } else if(r.exc) {
+                    alert('{{ _("Error restoring:") }} ' + JSON.parse(r.exc)[0]);
+                }
+            })
+            .catch(err => {
+                $('#btnRestoreDefault').html('<i class="fas fa-undo"></i> {{ _("Restore Default") }}');
+                console.error(err);
+            });
+        }
+    }
+
+    // AI Translation
+    function translateWithAi(sourceLang) {
+        let text = sourceLang === 'ar' ? $('#itemLabelAr').val().trim() : $('#itemLabelEn').val().trim();
+        if(!text) {
+            alert('{{ _("Please enter text first to translate.") }}');
+            return;
+        }
+
+        let targetInput = sourceLang === 'ar' ? $('#itemLabelEn') : $('#itemLabelAr');
+        let targetLangName = sourceLang === 'ar' ? 'English' : 'Arabic';
+        
+        targetInput.val('{{ _("Translating now...") }}').prop('disabled', true);
+        
+        let fd = new FormData();
+        fd.append('label', text);
+        fd.append('target_lang', targetLangName);
+
+        fetch('/api/method/admin.api.translate_menu_label_ai', {
+            method: 'POST',
+            headers: {'X-Frappe-CSRF-Token': window.frappe ? frappe.csrf_token : ''},
+            body: fd
+        })
+        .then(res => res.json())
+        .then(r => {
+            targetInput.prop('disabled', false);
+            if(r.message) {
+                if (r.message.trim() === 'ERR_NO_TRANSLATION' || r.message.includes('ERR_NO_TRANSLATION')) {
+                    targetInput.val('');
+                    alert('{{ _("No translation found. Please type the translation manually.") }}');
+                } else {
+                    targetInput.val(r.message);
+                }
+            } else {
+                targetInput.val('');
+                alert('{{ _("Translation failed. Please enter the name manually.") }}');
+            }
+        })
+        .catch(err => {
+            targetInput.prop('disabled', false).val('');
+            console.error(err);
+        });
+    }
+
+    // Abort AI if user types in target field
+    $('#itemLabelEn').on('input', function() {
+        if($(this).val() !== '{{ _("Translating now...") }}') {
+            $(this).prop('disabled', false);
+        }
+    });
+    $('#itemLabelAr').on('input', function() {
+        if($(this).val() !== '{{ _("Translating now...") }}') {
+            $(this).prop('disabled', false);
+        }
+    });
+
+</script>

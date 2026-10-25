@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Nomo System - Sidebar Overrides
+   ========================================================================== */
+
+/* Force Sidebar to match Header background in Nomo */
+.madar-sidebar {
+    background-color: var(--header-bg, #ffffff) !important;
+}
+
+/* Edge-to-edge items in Level 1 */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-toggle,
+.madar-sidebar:not(.collapsed) .level-1 > .menu-link {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    
+    /* Use header text color for the links */
+    background-color: transparent !important;
+    color: var(--header-text, #ffffff) !important;
+}
+
+/* Force icons to match header text */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-toggle .menu-icon,
+.madar-sidebar:not(.collapsed) .level-1 > .menu-link .menu-icon {
+    color: var(--header-text, #ffffff) !important;
+}
+
+/* Hover effect */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-toggle:hover,
+.madar-sidebar:not(.collapsed) .level-1 > .menu-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Active Level 1 */
+.madar-sidebar:not(.collapsed) .level-1 > .menu-link.active,
+.madar-sidebar:not(.collapsed) .level-1.open > .folder-toggle {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: var(--header-text, #ffffff) !important;
+    font-weight: bold;
+}
+
+/* Submenu container (Level 2 wrapper) - Edge to Edge */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-children {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    /* Submenus are a bit darker/lighter than the header to distinguish */
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Submenu Items (Level 2) */
+.madar-sidebar:not(.collapsed) .level-2 > .folder-toggle,
+.madar-sidebar:not(.collapsed) .level-2 > .menu-link {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    
+    /* Center the text! */
+    text-align: center !important;
+    justify-content: center !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    font-size: 13.5px !important;
+    
+    background-color: transparent !important;
+    color: var(--header-text, #ffffff) !important;
+}
+
+/* Hover & Active for Level 2 */
+.madar-sidebar:not(.collapsed) .level-2 > .folder-toggle:hover,
+.madar-sidebar:not(.collapsed) .level-2 > .menu-link:hover,
+.madar-sidebar:not(.collapsed) .level-2 > .menu-link.active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--header-text, #ffffff) !important;
+}
+
+/* Hide icons for Level 2 in Nomo */
+.madar-sidebar:not(.collapsed) .level-2 > .menu-link .menu-icon,
+.madar-sidebar:not(.collapsed) .level-2 > .folder-toggle .menu-icon {
+    display: none !important;
+}
+
+/* Ensure the arrow icon on level-1 stays pushed to the left in RTL */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-toggle .arrow-icon {
+    margin-inline-start: auto !important;
+}
+
+/* Hide favorite checkboxes for specific core items in Nomo */
+.madar-sidebar input.sidebar-fav-checkbox[data-route="app/home"],
+.madar-sidebar input.sidebar-fav-checkbox[data-route="app/dashbord"],
+.madar-sidebar input.sidebar-fav-checkbox[data-route="app/accounting"],
+.madar-sidebar input.sidebar-fav-checkbox[data-route="app/pos-awesome"] {
+    display: none !important;
+}
+
+
+/* Hide arrow icons for Level 1 folders in Nomo */
+.madar-sidebar:not(.collapsed) .level-1 > .folder-toggle .arrow-icon {
+    display: none !important;
+}
+

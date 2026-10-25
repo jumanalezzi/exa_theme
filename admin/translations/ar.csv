@@ -1,0 +1,312 @@
+"Setup Required","الإعداد مطلوب"
+
+"Welcome to Madar","مرحباً بك في مدار"
+
+"Please complete the system setup to proceed.","يرجى استكمال إعدادات النظام للمتابعة."
+
+"System Name","اسم النظام"
+
+"App Logo","شعار التطبيق"
+
+"App Name","اسم التطبيق"
+
+"Go to Settings","انتقل للإعدادات"
+
+"Access Denied","تم رفض الوصول"
+
+"The system identity settings are incomplete.","إعدادات هوية النظام غير مكتملة."
+
+"Please contact the administrator.","يرجى التواصل مع مدير النظام."
+
+"Logout","تسجيل الخروج"
+
+"Settings","الإعدادات"
+
+"Profile","الملف الشخصي"
+
+"System Setup Required","إعداد النظام مطلوب"
+
+"We need to configure some basic settings before starting (System Name and Logo).","نحن بحاجة لضبط بعض الإعدادات الأساسية قبل البدء (اسم النظام والشعار)."
+
+"Required Steps:","الخطوات المطلوبة:"
+
+"Click on the 'Go to Settings' button below.","اضغط على زر 'انتقل للإعدادات' بالأسفل."
+
+"Enter the system name (e.g., Khalid Foundation).","قم بكتابة اسم النظام (مثلاً: مؤسسة خالد)."
+
+"Upload the system logo for both Light and Dark themes.","ارفع شعار النظام للثيم الفاتح والغامق."
+
+"Go to Settings Now","انتقل لصفحة الإعدادات الآن"
+
+"Loading Menu...","جاري تحميل القائمة..."
+
+"Appearance Settings","إعدادات المظهر"
+
+"Themes Settings","إعدادات الثيمات"
+
+"Fonts Settings","إعدادات الخطوط"
+
+"Systems Settings","إعدادات الأنظمة"
+
+"Menus Settings","إعدادات القوائم"
+"Home Page","الصفحة الرئيسية"
+"Analytical Dashboard","اللوحة التحليلية"
+"All Companies","جميع الشركات"
+"From Date","من تاريخ"
+"To Date","إلى تاريخ"
+"Customize","تخصيص"
+"Favorites will be implemented in Phase 3","سيتم تفعيل المفضلة في المرحلة 3"
+"Receivables","المستحقات للغير (مدينة)"
+"Payables","الواجب دفعها (دائنة)"
+"Cash Balance","الرصيد النقدي"
+"Total Revenue","إجمالي الإيرادات"
+"vs last month","مقارنة بالشهر الماضي"
+"Financial Health","الأرباح والخسارة"
+"Profit & Loss","الربح والخسارة"
+"Cash Flow (This Month)","التدفق النقدي (هذا الشهر)"
+"Expenses Breakdown","تفصيل المصروفات"
+"Sales Performance","أداء المبيعات"
+"Sales Trend","اتجاه المبيعات"
+"Top Selling Items","أكثر الأصناف مبيعاً"
+"Inventory Health","حالة المخزون"
+"Stock Value by Warehouse","قيمة المخزون حسب المستودع"
+"Low Stock Items","الأصناف منخفضة المخزون"
+"Income","الإيرادات"
+"Expense","المصروفات"
+"Net Cash","صافي النقد"
+"Sales Orders","طلبات البيع"
+"Invoices","الفواتير"
+"Movement","الحركة"
+
+"Today","اليوم هذا"
+"This Week","الاسبوع هذا"
+"This Month","الشهر هذا"
+"This Quarter","الربع هذا"
+"This Half","النصف هذا"
+"This Year","السنة هذي"
+"Yesterday","اليوم الماضي"
+"Last Week","الاسبوع الماضي"
+"Last Month","الشهر الماضي"
+"Last Quarter","الربع الماضي"
+"Last Half","النصف الماضي"
+"Last Year","السنة الماضية"
+"Custom Date Range","تحديد التاريخ من إلى"
+"Favorites","المفضلات"
+"No favorites found.","لا يوجد مفضلات"
+
+"Journal Entry","قيد محاسبي"
+"Payment Entry","سند قبض/ صرف"
+"Chart of Accounts","الدليل المحاسبي"
+"Purchase Invoice","فاتورة مشتريات"
+"Sales Invoice","فاتورة مبيعات"
+"Customer","العملاء"
+"Supplier","الموردين"
+"Item","الأصناف"
+"Currency Exchange","صرف العملات"
+"General Ledger","الأستاذ العام"
+"Trial Balance","ميزان مراجعه"
+
+"Executive Dashboard","اللوحة التنفيذية"
+"Executive Shortcuts","الاختصارات التنفيذية"
+"Add Shortcut","إضافة اختصار"
+"Favorites customization will be enabled soon","تخصيص المفضلات سيتم تفعيله قريباً"
+"Net Profit","صافي الربح"
+"Financial Performance Overview","نظرة عامة على الأداء المالي"
+"Export","تصدير"
+"Profitability Breakdown","تحليل الربحية"
+"Products","منتجات"
+"Services","خدمات"
+"Consulting","استشارات"
+"Maintenance","صيانة"
+"Revenue by Segment","الإيرادات حسب القطاع"
+"Current Year","السنة الحالية"
+"Previous Year","السنة السابقة"
+
+"Salaries","رواتب"
+"Rent","إيجار"
+"Marketing","تسويق"
+"Utilities","مرافق"
+"Other","أخرى"
+"Target Reached","الهدف المحقق"
+"Receivables Aging","أعمار الديون"
+"Top Territories","أفضل المناطق"
+
+"Sales Target Achievement","تحقيق أهداف المبيعات"
+"Expense Categories","تصنيفات المصروفات"
+"Jan","يناير"
+"Feb","فبراير"
+"Mar","مارس"
+"Apr","أبريل"
+"May","مايو"
+"Jun","يونيو"
+"Jul","يوليو"
+"Aug","أغسطس"
+"Sep","سبتمبر"
+"Oct","أكتوبر"
+"Nov","نوفمبر"
+"Dec","ديسمبر"
+"B2B","شركات (B2B)"
+"B2C","أفراد (B2C)"
+"Gov","حكومي"
+"Exports","تصدير"
+"Retail","تجزئة"
+"Online","أونلاين"
+"Riyadh","الرياض"
+"Jeddah","جدة"
+"Dammam","الدمام"
+"Mecca","مكة"
+"Medina","المدينة"
+"Key Acc","كبار العملاء"
+"Wholesale","جملة"
+"0-30 Days","0-30 يوم"
+"31-60 Days","31-60 يوم"
+"61-90 Days","61-90 يوم"
+"> 90 Days","أكثر من 90 يوم"
+
+"Total Expenses","إجمالي المصروفات"
+"Key Customers","كبار العملاء"
+"Budget Variance","انحراف الموازنة"
+"Custom Range","فترة مخصصة"
+"This Quarter","هذا الربع"
+"Last Quarter","الربع الماضي"
+"This Half","هذا النصف"
+"Last Half","النصف الماضي"
+"This Year","هذه السنة"
+"Last Year","السنة الماضية"
+"General Ledger","دفتر الأستاذ العام"
+
+"Operations Throughput","الإنتاجية التشغيلية"
+"Real-time transaction volume across the system","حجم العمليات الفوري عبر النظام"
+"Transactions","العمليات"
+"Pending Approvals","الاعتمادات المعلقة"
+"vs yesterday","مقارنة بالأمس"
+"Task Completion","إنجاز المهام"
+"Live Activity Feed","سجل الأنشطة المباشر"
+"Sales Order Approved","اعتماد أمر مبيعات"
+"SO-2023-0199 approved by M. Ahmad","تم اعتماد أمر مبيعات SO-2023-0199 بواسطة محمد أحمد"
+"2m ago","منذ دقيقتين"
+"New User Registered","تسجيل مستخدم جديد"
+"Khaled joined the Operations Team","انضم خالد إلى فريق العمليات"
+"15m ago","منذ 15 دقيقة"
+"Inventory Alert","تنبيه المخزون"
+"Item 'Server Rack A' is running low","صنف 'حامل خوادم' على وشك النفاد"
+"1h ago","منذ ساعة"
+"Payment Failed","فشل عملية الدفع"
+"Invoice INV-9831 payment gateway timeout","انتهت مهلة بوابة الدفع للفاتورة INV-9831"
+"3h ago","منذ 3 ساعات"
+"ZATCA Sync Complete","اكتملت مزامنة هيئة الزكاة"
+"Successfully synced 42 invoices","تمت مزامنة 42 فاتورة بنجاح"
+"5h ago","منذ 5 ساعات"
+"System Health","حالة النظام"
+"ZATCA Integration","الربط مع هيئة الزكاة"
+"Online","متصل"
+"Payment Gateway","بوابة الدفع"
+"Backup Service","خدمة النسخ الاحتياطي"
+"Syncing","جاري المزامنة"
+"Quick Actions","إجراءات سريعة"
+"New Invoice","فاتورة جديدة"
+"Add Client","إضافة عميل"
+"Receive Item","استلام صنف"
+"Run Report","استخراج تقرير"
+"Resource Load by Department","حمل الموارد حسب القسم"
+"Active","نشط"
+"Idle","خامل"
+"Overloaded","مكدس"
+"Sales","المبيعات"
+"Operations","العمليات"
+"Finance","المالية"
+"Customize","تخصيص"
+"Support Tickets","تذاكر الدعم"
+"Open","مفتوحة"
+"Pending","قيد الانتظار"
+"Closed","مغلقة"
+"Pending Approvals","الاعتمادات المعلقة"
+"Do not put off until tomorrow what you can do today","لا تؤجل عمل اليوم إلى الغد"
+"vs last week","مقارنة بالأسبوع الماضي"
+"vs last quarter","مقارنة بالربع الماضي"
+"vs last half","مقارنة بالنصف الماضي"
+"vs last year","مقارنة بالسنة الماضية"
+"vs previous period","مقارنة بالفترة السابقة"
+
+"vs day before","مقارنة باليوم الذي قبله"
+"vs week before","مقارنة بالأسبوع الذي قبله"
+"vs month before","مقارنة بالشهر الذي قبله"
+"vs quarter before","مقارنة بالربع الذي قبله"
+"vs half before","مقارنة بالنصف الذي قبله"
+"vs year before","مقارنة بالسنة التي قبلها"
+"vs previous years","مقارنة بالسنوات السابقة"
+
+"Net Loss","صافي الخسارة"
+"Profit & Loss Section","الأرباح والخسائر"
+
+Purchasing Performance,أداء المشتريات
+Spend vs. Budget,الإنفاق الفعلي مقابل الميزانية
+Cost Savings,توفير التكاليف
+On-Time Delivery (OTD),معدل التسليم في الموعد (OTD)
+Budget (PO),الميزانية (طلبات الشراء)
+Actual Spend,الإنفاق الفعلي
+On Time,في الموعد
+
+
+Purchasing Performance,أداء المشتريات
+Spend vs. Budget,الإنفاق الفعلي مقابل الميزانية
+Cost Savings,توفير التكاليف
+On-Time Delivery (OTD),معدل التسليم في الموعد (OTD)
+Actual Spend,الإنفاق الفعلي
+Budget,الميزانية
+
+
+This Quarter,الربع الجاري
+This Half,النصف الجاري
+Yesterday,الأمس
+Last Week,الأسبوع الماضي
+Last Half,النصف الماضي
+Last Quarter,الربع الماضي
+
+Current Stock,المخزون الحالي
+Reorder Level,نقطة إعادة الطلب
+No Data,لا توجد بيانات
+Units,وحدة
+Movement,الحركة
+Total Transactions,إجمالي المعاملات
+Pending Transactions,المعاملات المعلقة
+Completed Transactions,المعاملات المكتملة
+Purchase Trend,اتجاه المشتريات
+Transaction Count,عدد المعاملات
+Purchase Value,قيمة المشتريات
+Supplier Invoices,فواتير الموردين
+Paid,مدفوعة
+Unpaid,غير مدفوعة
+Overdue,مستحقة
+Count,العدد
+Amount,المبلغ
+Restore Default,استعادة الافتراضي
+Add Main Button,إضافة زر رئيسي
+Save Menu,حفظ القائمة
+Loading...,جاري التحميل...
+Add Item,إضافة عنصر
+Folder (Dropdown),مجلد (قائمة منسدلة)
+Link,رابط
+Arabic Name,الاسم بالعربي
+Translate to English with AI,ترجمة للإنجليزية بالذكاء الاصطناعي
+English Name,الاسم بالإنجليزي
+Translate to Arabic with AI,ترجمة للعربية بالذكاء الاصطناعي
+Icon,الأيقونة
+Click to select icon,اضغط لاختيار أيقونة
+DocType Route,رابط الدوكتايب (DocType)
+Search DocType...,ابحث عن دوكتايب...
+Confirm,تأكيد
+Add Submenu,إضافة فرعي
+Add Link,إضافة رابط
+Edit Item,تعديل عنصر
+Saving...,جاري الحفظ...
+Saved successfully!,تم الحفظ بنجاح!
+Error saving:,خطأ في الحفظ:
+Restoring...,جاري الاستعادة...
+Are you sure you want to restore the default menu? Any unsaved changes will be lost.,هل أنت متأكد من استعادة القائمة الافتراضية؟ سيتم مسح أي تعديلات قمت بها.
+Restored default menu successfully!,تمت الاستعادة بنجاح!
+Error restoring:,خطأ في الاستعادة:
+Translating now...,يتم الترجمة الآن...
+Translation failed. Please enter the name manually.,فشلت الترجمة. الرجاء إدخال الاسم يدوياً.
+Please enter text first to translate.,الرجاء إدخال نص أولاً للترجمة.
+No translation found. Please type the translation manually.,لم يتم العثور على ترجمة، الرجاء إدخال الاسم يدوياً

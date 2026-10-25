@@ -1,0 +1,477 @@
+:root {
+    /* الإعدادات الهيكلية */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 55px;
+    --header-height: 65px;
+    --transition-speed: 0.3s;
+    
+    /* المتغيرات اللونية (سيتم تحديث قيمها من الجافاسكريبت) */
+    --bg-main: #f8fafc;
+    --text-main: #1e293b;
+}
+
+/* --- ضبط الجسم (Body) --- */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* منع التمرير المزدوج */
+    font-family: var(--main-font, 'Cairo', sans-serif) !important;
+}
+/* تصميم الشاشة الترحيبية */
+.splash-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff; /* لون الخلفية بيضاء، يمكنك تغييرها لتناسب هويتك */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* تضمن البقاء فوق الفريم والحاويات */
+    transition: opacity 0.4s ease-out, visibility 0.4s;
+}
+
+.splash-logo-container {
+    text-align: center;
+}
+
+/* حجم الشعار وحركة النبض */
+.pulse-logo {
+    width: 120px; /* تحكم بحجم الشعار من هنا */
+    height: auto;
+    animation: madarPulse 1.8s infinite ease-in-out;
+}
+
+.splash-loader-text {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #6c757d;
+    font-family: sans-serif;
+}
+
+/* تأثير حركة النبض البرمجية */
+@keyframes madarPulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+/* --- الحاوية الكبرى (Wrapper) --- */
+.madar-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+/* --- الهيدر (Header) --- */
+.madar-header {
+    height: var(--header-height);
+    background-color: var(--l1-bg);
+    color: var(--l1-text);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    flex-shrink: 0; /* يمنع الهيدر من الانكماش */
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+} 
+
+/* --- الحاوية الوسطى (Main Container) --- */
+.main-layout-container {
+    display: flex;
+    flex: 1; /* يملأ باقي طول الصفحة */
+    overflow: hidden;
+    position: relative;
+    /* الاتجاه سيعتمد على dir في html تلقائياً */
+}
+
+/* --- السايدبار (Sidebar) --- */
+.madar-sidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+    background-color: var(--l1-bg);
+    transition: width var(--transition-speed) ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0; /* يمنع السايدبار من الانكماش */
+    border-inline-end: 1px solid rgba(0,0,0,0.05); /* يضع الحدود حسب الاتجاه */
+}
+
+/* حالة التقليص */
+.madar-sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+/* --- منطقة المحتوى (Content) --- */
+.madar-content {
+    flex: 1; /* يملأ المساحة المتبقية بجانب السايدبار */
+    height: 100%;
+    position: relative;
+    background-color: var(--bg-main);
+}
+
+/* --- الفريم (Iframe) --- */
+#systemFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* --- وضع ملء الشاشة لشاشات نقاط البيع (POS Fullscreen Mode) --- */
+html.madar-pos-mode .madar-header,
+body.madar-pos-mode .madar-header,
+.madar-wrapper.pos-fullscreen-mode .madar-header,
+html.madar-pos-mode .madar-sidebar,
+body.madar-pos-mode .madar-sidebar,
+.madar-wrapper.pos-fullscreen-mode .madar-sidebar,
+html.madar-pos-mode #mainSidebar,
+body.madar-pos-mode #mainSidebar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+html.madar-pos-mode .main-layout-container,
+body.madar-pos-mode .main-layout-container,
+.madar-wrapper.pos-fullscreen-mode .main-layout-container {
+    height: 100vh !important;
+    width: 100vw !important;
+    max-height: 100vh !important;
+    max-width: 100vw !important;
+    flex: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+html.madar-pos-mode .madar-content,
+body.madar-pos-mode .madar-content,
+.madar-wrapper.pos-fullscreen-mode .madar-content {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    flex: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+html.madar-pos-mode #systemFrame,
+body.madar-pos-mode #systemFrame {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border: none !important;
+}
+
+/* --- التجاوب مع RTL/LTR --- */
+/* بفضل Flexbox، إذا كان السايدبار قبل الماين في الـ HTML، 
+سيظهر في اليمين إذا كانت الصفحة RTL وفي اليسار إذا كانت LTR تلقائياً */
+
+
+/* --- تنسيقات القوائم والمستويات --- */
+.nav-link {
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+/* المستوى الأول */
+.menu-l1 { 
+    background-color: var(--l1-bg); 
+    color: var(--l1-text); 
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.menu-l1:hover { background-color: var(--l1-hover); }
+
+/* المستوى الثاني */
+.menu-l2 { 
+    background-color: var(--l2-bg); 
+    color: var(--l2-text); 
+    font-size: 0.95rem;
+    padding-right: 25px !important; /* إزاحة لليمين */
+}
+.menu-l2:hover { background-color: var(--l2-hover); }
+
+/* المستوى الثالث (الروابط النهائية) */
+.menu-l3 { 
+    background-color: var(--l3-bg); 
+    color: var(--l3-text); 
+    font-size: 0.85rem;
+    padding-right: 45px !important; /* إزاحة أكبر */
+    position: relative;
+}
+/* إضافة علامة صغيرة بجانب الرابط في المستوى الثالث */
+.menu-l3::before {
+    content: "";
+    position: absolute;
+    right: 35px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    background-color: currentColor;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.menu-l3:hover, .menu-l3.active {
+    background-color: var(--l3-active-bg) !important;
+    color: var(--l3-active-text) !important;
+}
+
+/* --- محرك الـ Accordion (الأسهم) --- */
+.chevron-icon {
+    transition: transform var(--transition-speed);
+}
+.nav-link[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* --- منطقة المحتوى --- */
+
+
+
+/* تنسيقات أيقونة المستخدم (ERPNext Style) */
+.user-avatar-wrapper .avatar-medium {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%; /* لجعلها دائرية */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.2);
+    transition: transform 0.2s;
+}
+
+.user-avatar-wrapper .avatar-medium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* في حال عدم وجود صورة، يظهر الحرف الأول بخلفية ملونة */
+.user-avatar-wrapper .standard-image {
+    font-weight: bold;
+    color: white;
+    background-color: var(--l3-active-bg); /* يأخذ لون الثيم النشط */
+}
+
+.user-dropdown .dropdown-toggle::after {
+    display: none; /* إخفاء سهم الداربداون الصغير لجمالية التصميم */
+}
+
+.btn-header {
+    color: var(--l1-text);
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+}
+
+.btn-header:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--l1-text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.app-logo {
+    height: 32px;
+    width: auto;
+}
+
+
+/* تنسيقات أزرار الهيدر العامة */
+.btn-header {
+    background-color: transparent;
+    color: var(--l1-text) !important; /* التأكد من أخذ لون النص من الثيم */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* حل مشكلة اختفاء الكلمة عند التمرير */
+.btn-header:hover {
+    background-color: var(--l1-hover); /* استخدام لون الـ hover المعرف في الثيم */
+    color: var(--l1-text) !important; /* الحفاظ على لون النص ثابتاً */
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* تنسيق أيقونة المستخدم لتتناسق مع الثيم */
+.user-avatar-wrapper .standard-image {
+    background-color: var(--l3-active-bg) !important;
+    color: var(--l3-active-text) !important;
+}
+
+/* قائمة المنسدلة للمستخدم */
+.user-dropdown .dropdown-menu {
+    background-color: var(--l1-bg);
+    border: 1px solid var(--l2-hover);
+}
+
+.user-dropdown .dropdown-item {
+    color: var(--l1-text);
+}
+
+.user-dropdown .dropdown-item:hover {
+    background-color: var(--l1-hover);
+    color: var(--l1-text);
+}
+
+.btn-header:hover {
+    background-color: var(--l1-hover) !important;
+    color: var(--l1-text) !important; /* هذا السطر يمنع اختفاء النص */
+}
+
+.btn-header:hover span, 
+.btn-header:hover i {
+    color: var(--l1-text) !important;
+}
+
+/* تنسيق زر اللغة وأزرار الهيدر */
+.btn-header {
+    color: var(--l1-text) !important;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-header:hover {
+    /* نستخدم لون الـ hover من الثيم المختار */
+    background-color: var(--l1-hover) !important;
+    color: var(--l1-text) !important;
+    opacity: 1;
+}
+
+/* التأكد من أن الأيقونة داخل الزر لا يتغير لونها بشكل خاطئ */
+.btn-header i {
+    color: inherit !important;
+}
+/* تنسيق موحد لجميع عناصر الهيدر التفاعلية */
+.madar-header button, 
+.madar-header .dropdown-toggle {
+    color: var(--l1-text) !important;
+    background: transparent;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.madar-header button:hover,
+.madar-header .dropdown-toggle:hover {
+    background-color: var(--l1-hover) !important;
+}
+
+/* لضمان تناسق أيقونة المستخدم مع الثيم */
+.user-avatar-wrapper .avatar-medium {
+    border: 2px solid var(--l3-active-bg);
+}
+
+
+/* دعم الاتجاهين تلقائياً (RTL/LTR) */
+/* ملاحظة: flex-direction الافتراضي row يضع السايدبار أولاً. 
+   إذا كان السايدبار في الكود قبل main، سيوضع في جهة البداية (يمين في RTL) */
+/* --- التجاوب مع الشاشات الصغيرة (Responsive) --- */
+@media (max-width: 991px) {
+    .madar-sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 1050;
+        /* Default/RTL: Hide using transform, opacity, and visibility */
+        transform: translateX(100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+        box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+        right: 0;
+        left: auto;
+    }
+    
+    html[dir="ltr"] .madar-sidebar {
+        transform: translateX(-100%);
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        left: 0;
+        right: auto;
+    }
+
+    /* When Opened */
+    .madar-sidebar.collapsed {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        width: var(--sidebar-width) !important;
+    }
+    
+    html[dir="ltr"] .madar-sidebar.collapsed {
+        transform: translateX(0) !important;
+    }
+
+    .nav-text, .chevron-icon {
+        display: inline-block !important; /* دائما إظهار النص في الجوال */
+    }
+}
+
+/* Desktop Collapse Behavior */
+@media (min-width: 992px) {
+    .madar-sidebar.collapsed .nav-text,
+    .madar-sidebar.collapsed .chevron-icon {
+        display: none !important;
+    }
+    .madar-sidebar.collapsed .menu-l1 {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+/* Override Frappe Action Buttons to use Theme Primary Color */
+.btn-primary, .primary-action,
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover, .primary-action:hover {
+    filter: brightness(0.9);
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}

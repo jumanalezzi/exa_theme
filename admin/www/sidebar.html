@@ -1,0 +1,60 @@
+ <link rel="stylesheet" href="/assets/admin/css/madar-sidebar.css">
+<nav class="sidebar-nav" id="sidebarMenuContainer">
+    <div id="dynamicMenuContainer">
+        <div class="sidebar-loader p-4 text-center text-muted">
+            <i class="fas fa-spinner fa-spin me-2"></i> {{ _("Loading Menu...") }}
+        </div>
+    </div>
+
+    <div class="sidebar-footer-menu border-top mt-auto" id="fixedSettingsMenu" >
+        <ul class="menu-list">
+            <li class="menu-item folder-item fixed-settings-root level-1">
+                <div class="folder-toggle">
+                    <i class="fas fa-palette menu-icon"></i>
+                    <span class="menu-label">{{ _("Appearance Settings") }}</span>
+                    <i class="fas fa-chevron-left arrow-icon"></i>
+                </div>
+                <div class="folder-children" style="display: none;">
+                    <ul class="menu-list">
+                        <li class="menu-item link-item admin-only level-2">
+                            <a href="/madar?route=app/madar-theme-settings" class="menu-link " 
+                            data-path="/appearance-settings/madar-theme-settings.html"
+                            data-route="app/madar-theme-settings" data-view="file">
+                                <i class="fas fa-paint-brush menu-icon"></i>
+                                <span class="menu-label">{{ _("Themes Settings") }}</span>
+                            </a>    
+                        </li>
+                        <li class="menu-item link-item admin-only level-2">
+                            <a href="/madar?route=app/madar-font-settings" class="menu-link " 
+                            data-path="/appearance-settings/madar-font-settings.html"
+                            data-route="app/madar-font-settings" data-view="file">
+                                <i class="fas fa-font menu-icon"></i>
+                                <span class="menu-label">{{ _("Fonts Settings") }}</span>
+                            </a>
+                        </li>
+                        <!-- <li class="menu-item link-item admin-only level-2">
+                            <a href="/madar?route=app/madar-system-settings" class="menu-link " 
+                            data-path="/appearance-settings/madar-system-settings.html"
+                            data-route="app/madar-system-settings" data-view="file">
+                                <i class="fas fa-cogs menu-icon"></i>
+                                <span class="menu-label">{{ _("Systems Settings") }}</span>
+                            </a>
+                        </li> -->
+                        <li class="menu-item link-item admin-only level-2" >
+                            <a href="/madar?route=app/madar-menu-settings" class="menu-link " 
+                            data-path="/appearance-settings/madar-menu-settings.html"
+                            data-route="app/madar-menu-settings" data-view="file">
+                                <i class="fas fa-list-ul menu-icon"></i>
+                                <span class="menu-label">{{ _("Menus Settings") }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script src="/assets/admin/js/madar-sidebar.js?v=2.5"></script>
+<script src="/assets/admin/js/madar-router.js?v=7.0"></script>
+

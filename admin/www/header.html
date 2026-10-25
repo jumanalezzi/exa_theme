@@ -1,0 +1,173 @@
+
+    <div class="header-container d-flex justify-content-between align-items-center w-100 px-3">
+        
+        <div class="header-right-side d-flex align-items-center">
+            <button class="sidebar-toggle-btn me-2" onclick="toggleSidebar()" title="{{ _('Toggle Sidebar') }}">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <a href="/madar" style="text-decoration: none; color: inherit;">
+                <div class="brand-section d-flex align-items-center">
+                    <img id="main-logo" src="{{ settings.light_logo if user_pref.madar_theme == 'Light' else settings.dark_logo }}" 
+                         class="app-logo" alt="Logo">
+                    <span class="app-name ms-2 d-none d-sm-inline">{{ settings.app_name_ar if lang == 'ar' else settings.app_name_en}}</span>
+                </div>
+            </a>
+
+            {% if "posawesome" in installed_apps %}
+            <!-- أيقونة عربة التسوق لنقطة البيع -->
+            <a href="/madar?route=app%2Fposapp" onclick="event.preventDefault(); window.history.pushState({ route: 'app/posapp' }, '', '/madar?route=app%2Fposapp'); MadarRouter.handleCurrentRoute();" id="madar-pos-cart-icon" class="btn btn-header-action ms-3 ms-md-4 d-flex align-items-center" title="نقطة البيع">
+                <i class="fas fa-shopping-cart" style="font-size: 1.1rem;"></i>
+                <style>
+                    @media (min-width: 768px) { #madar-pos-cart-icon i { font-size: 1.4rem !important; } }
+                </style>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="header-left-side d-flex align-items-center">
+            <!-- زر اختيار النظام -->
+<!--
+<div class="system-selector me-2 d-none d-lg-block dropdown" id="system-selector-container">
+    <button class="btn btn-header-action dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <i class="fas fa-desktop"></i>
+        <span class="ms-2" id="current-system-name">{{ _("System") }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" id="system-dropdown-list">
+        <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</span></li>
+    </ul>
+</div>
+-->
+
+            <!-- زر اختيار الثيم -->
+<div class="theme-selector me-2 d-none d-lg-block dropdown">
+    <button class="btn btn-header-action dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <i class="fas fa-palette"></i>
+        <span class="ms-2" id="current-theme-name">{{ _("Theme") }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" id="theme-dropdown-list">
+        <!-- سيتم تعبئة الثيمات هنا عبر الجافاسكريبت -->
+        <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</span></li>
+    </ul>
+</div>
+
+<!-- زر اختيار الخط -->
+<!-- زر اختيار الخط -->
+<div class="font-selector me-3 d-none d-lg-block dropdown">
+    <button class="btn btn-header-action dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <i class="fas fa-font"></i>
+        <span class="ms-2" id="current-font-name">{{ _("Font") }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" id="font-dropdown-list">
+        <!-- سيتم تعبئة الخطوط هنا عبر الجافاسكريبت -->
+        <li><span class="dropdown-item text-muted"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</span></li>
+    </ul>
+</div>
+            <div class="language-selector me-2 me-md-3">
+                <button class="btn btn-header-action d-flex align-items-center" onclick="toggleLanguage()">
+                    <i class="fas fa-globe"></i>
+                    <span class="ms-2 d-none d-md-inline">{{ 'English' if lang == 'ar' else 'العربية' }}</span>
+                </button>
+            </div>
+
+            <!-- أيقونة البحث (لكل الشاشات) -->
+            <button class="btn btn-header-action me-2" data-bs-toggle="modal" data-bs-target="#madarSearchModal" title="بحث (Ctrl+G)">
+                <i class="fas fa-search"></i>
+            </button>
+
+            <!-- التنبيهات (الجرس) -->
+            <div class="notifications-container me-2 me-md-3 dropdown">
+                <button class="btn btn-header-action position-relative" data-bs-toggle="dropdown" aria-expanded="false" id="madarNotificationBtn">
+                    <i class="far fa-bell"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="madar-notification-badge" style="display: none;">
+                        0
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-0" aria-labelledby="madarNotificationBtn" style="width: 360px; max-height: 80vh; overflow: hidden; border-radius: 8px;">
+                    <div class="notifications-header border-bottom">
+                        <div class="d-flex justify-content-between align-items-center px-3 pt-3 pb-0">
+                            <div class="nav nav-tabs border-0" id="notification-tabs" role="tablist">
+                                <button class="nav-link active fw-bold px-0 py-2 me-4 border-0 bg-transparent text-primary" style="border-bottom: 2px solid #0052cc !important;" id="notif-tab" data-bs-toggle="tab" data-bs-target="#notif-panel" type="button" role="tab">{{ _("Notifications") }}</button>
+                                <button class="nav-link fw-bold px-0 py-2 me-4 border-0 bg-transparent text-muted" id="events-tab" data-bs-toggle="tab" data-bs-target="#events-panel" type="button" role="tab" onclick="fetchMadarEvents()">{{ _("Events") }}</button>
+                            </div>
+                            <div class="notification-actions text-muted pb-2">
+                                <i class="fas fa-check-double ms-3 hover-primary" style="cursor: pointer;" title="تحديد الكل كمقروء" onclick="markAllNotificationsAsRead()"></i>
+                                <i class="fas fa-cog hover-primary" style="cursor: pointer;" title="إعدادات الإشعارات" onclick="MadarRouter.navigate('app/notification-settings')"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="notification-tabContent" style="flex-grow: 1; overflow-y: auto; min-height: 350px;">
+                        <!-- Notifications Tab -->
+                        <div class="tab-pane fade show active" id="notif-panel" role="tabpanel">
+                            <div id="madar-notifications-list" class="p-0">
+                                <div class="text-center p-5 text-muted" style="margin-top: 40px;">
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-3 text-secondary"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    <h6 class="fw-bold mb-1 text-dark">لا توجد إشعارات جديدة</h6>
+                                    <p class="small mb-0">يبدو أنك لم تتلقَ أي إشعارات مؤخراً.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Events Tab -->
+                        <div class="tab-pane fade" id="events-panel" role="tabpanel">
+                            <div id="madar-events-list" class="p-0">
+                                <div class="text-center p-5 text-muted" style="margin-top: 40px;">
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-3 text-secondary"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <h6 class="fw-bold mb-1 text-dark">لا توجد فعاليات قادمة</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown user-dropdown">
+                <button class="btn user-btn-wrapper p-0 d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar-container">
+                        {% set user_doc = frappe.get_doc("User", frappe.session.user) %}
+                        {% if user_doc.user_image %}
+                            <img src="{{ user_doc.user_image }}" class="avatar-img" alt="{{ user_doc.full_name }}">
+                        {% else %}
+                            <div class="avatar-initials">
+                                {{ user_doc.first_name[0] | upper if user_doc.first_name else 'U' }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2">
+                    <li class="dropdown-header text-start py-3">
+                        <div class="fw-bold text-main">{{ frappe.session.user_fullname }}</div>
+                        <div class="small text-muted">{{ frappe.session.user }}</div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item py-2" href="/app/user-profile"><i class="fas fa-user-circle me-2"></i> {{ _("Profile") }}</a></li>
+                    <li><a class="dropdown-item py-2 text-danger" href="javascript:handleLogout()">
+                        <i class="fas fa-sign-out-alt me-2"></i> {{ _("Logout") }}
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة البحث الشامل -->
+    <div class="modal fade" id="madarSearchModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+                <div class="modal-header border-bottom-0 p-3 bg-light">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-primary"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0 shadow-none bg-white" id="madar-search-input" placeholder="ابحث عن مستند، عميل، تقرير..." autocomplete="off">
+                    </div>
+                </div>
+                <div class="modal-body p-0" style="max-height: 60vh; overflow-y: auto;">
+                    <div id="madar-search-results" class="list-group list-group-flush">
+                        <div class="text-center p-5 text-muted">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mb-3 text-secondary"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <h6 class="fw-bold text-dark">جاهز للبحث</h6>
+                            <p class="small mb-0">اكتب ما تبحث عنه للبدء...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

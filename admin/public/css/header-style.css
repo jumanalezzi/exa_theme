@@ -1,0 +1,172 @@
+
+/* --- تنسيقات الهيدر الاحترافية --- */
+.madar-header {
+    height: var(--header-height);
+    /* استخدام لون خلفية الثيم الجديد، والرجوع للقديم كاحتياط */
+    background-color: var(--header-bg, var(--l1-bg));
+    color: var(--header-text, var(--l1-text));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all var(--transition-speed, 0.3s ease);
+}
+
+/* زر القائمة الجانبية */
+.sidebar-toggle-btn {
+    display: inline-flex !important; /* يضمن بقاء المساحة محجوزة للعنصر */
+    align-items: center;
+    justify-content: center;
+    min-width: 38px; /* تحديد عرض أدنى */
+    min-height: 38px;
+    background-color: var(--header-buttons-bg, rgba(255, 255, 255, 0.1));
+    border: 1px solid var(--header-text, var(--l1-text)); /* متوافق مع الثيم */
+    cursor: pointer;
+    -webkit-appearance: none; /* إزالة أي تنسيق افتراضي من كروم */
+    box-sizing: border-box;
+    outline: none;
+    overflow: visible;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle-btn i {
+    color: var(--header-text, var(--l1-text)) !important;
+    font-size: 1.2rem;
+    display: block;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--header-buttons-hover-bg, var(--l1-hover));
+    border-color: var(--header-buttons-hover-text, var(--l3-active-bg));
+}
+.sidebar-toggle-btn:hover i {
+    color: var(--header-buttons-hover-text, var(--l1-text)) !important;
+}
+
+/* أزرار الهيدر (اللغة، الثيم، الخطوط) */
+.btn-header-action {
+    background-color: var(--header-buttons-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--header-buttons-bg, rgba(255, 255, 255, 0.15));
+    color: var(--header-buttons-text, var(--l1-text)) !important;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: var(--main-font, inherit); /* وراثة الخط الديناميكي */
+    transition: all 0.3s ease;
+}
+
+.btn-header-action:hover {
+    background-color: var(--header-buttons-hover-bg, var(--l1-hover));
+    border-color: var(--header-buttons-hover-bg, var(--l3-active-bg));
+    color: var(--header-buttons-hover-text, var(--l1-text)) !important;
+}
+
+/* نصوص وأيقونات أزرار الهيدر لترث الألوان صح */
+.btn-header-action i, 
+.btn-header-action span {
+    color: inherit !important;
+}
+
+/* حاوية أفاتار المستخدم */
+.user-avatar-container {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px; /* شكل عصري (Squircle) */
+    border: 2px solid var(--sidebar-level-1-active-bg, var(--l3-active-bg));
+    padding: 2px;
+    background-color: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.user-btn-wrapper:hover .user-avatar-container {
+    transform: scale(1.05);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.avatar-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--sidebar-level-1-active-bg, var(--l3-active-bg));
+    color: var(--sidebar-level-1-active-text, var(--l3-active-text));
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* تعديل القوائم المنسدلة (للمستخدم، والثيمات، والخطوط) لتناسب الثيم الحالي */
+.user-dropdown .dropdown-menu,
+.theme-selector .dropdown-menu,
+.font-selector .dropdown-menu {
+    /* إضافة !important لضمان كسر أي شفافية موروثة */
+    background-color: var(--header-bg) !important; 
+    background-image: none !important; /* لإزالة أي تدرج شفاف */
+    color: var(--header-text);
+    /* إضافة تعتيم كامل */
+    opacity: 1 !important;
+    
+    /* تأكيد الحدود والظل لتبدو فوق الفريم */
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 10px 15px -3px var(--header-text), 0 4px 6px -2px var(--header-text) !important;
+}
+
+.user-dropdown .dropdown-item,
+.theme-selector .dropdown-item,
+.font-selector .dropdown-item {
+    color: var(--header-buttons-text, var(--l1-text));
+    font-family: var(--main-font, inherit);
+}
+
+.user-dropdown .dropdown-item:hover,
+.theme-selector .dropdown-item:hover,
+.font-selector .dropdown-item:hover {
+    background-color: var(--header-buttons-hover-bg, var(--l1-hover));
+    color: var(--header-buttons-hover-text, var(--l1-text));
+}
+/* زر القائمة الجانبية المحدث */
+.sidebar-toggle-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    /* التعديل هنا: استخدام متغيرات الثيم */
+    background-color: var(--header-buttons-bg, rgba(255, 255, 255, 0.1)) !important;
+    border: 1px solid var(--header-text, #ffffff) !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle-btn i {
+    /* التعديل هنا: ضمان تغير لون الأيقونة مع النص */
+    color: var(--header-text, #ffffff) !important;
+    font-size: 1.2rem;
+}
+
+.sidebar-toggle-btn:hover {
+    /* التعديل هنا: تأثير التمرير المتوافق مع الثيم */
+    background-color: var(--header-buttons-hover-bg, rgba(255, 255, 255, 0.2)) !important;
+    border-color: var(--header-buttons-hover-text) !important;
+}
+
+.sidebar-toggle-btn:hover i {
+    color: var(--header-buttons-hover-text, #ffffff) !important;
+}
+/* التجاوب للجوال */
+@media (max-width: 576px) {
+    .btn-header-action {
+        padding: 6px 8px;
+    }
+    .user-avatar-container {
+        width: 38px;
+        height: 38px;
+    }
+}

@@ -1,0 +1,337 @@
+
+    <style>
+    /* 🚨 تم ضبط المتغيرات لتتطابق 100% مع مصفوفة content الخاصة بك */
+    :root {
+        /* العناصر العامة لقسم المحتوى */
+        --content-bg: #f4f6f9;                                 /* content.bg */
+        --text-color: #212529;                                 /* content.text */
+        --text-muted: #6c757d;                                 /* content.muted_text */
+        --border-color: #dee2e6;                               /* content.border_color */
+        
+        /* الروابط */
+        --link-color: #0d6efd;                                 /* content.links.text */
+        --link-hover: #0a58ca;                                 /* content.links.hover_text */
+        
+        /* الأزرار */
+        --btn-bg: #0d6efd;                                     /* content.buttons.bg */
+        --btn-text: #ffffff;                                   /* content.buttons.text */
+        --btn-hover-bg: #0b5ed7;                               /* content.buttons.hover_bg */
+        --btn-hover-text: #ffffff;                             /* content.buttons.hover_text */
+        
+        /* الورقة / البطاقة الرئيسية */
+        --paper-bg: #ffffff;                                   /* content.cards.bg */
+        --paper-radius: 12px;                                  /* content.cards.border_radius */
+        --paper-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);        /* content.cards.shadow */
+        
+        /* الجداول */
+        --table-header-bg: #0d6efd;                            /* content.tables.header_bg */
+        --table-header-text: #ffffff;                          /* content.tables.header_text */
+        --table-row-bg: #ffffff;                               /* content.tables.row_bg */
+        --table-row-alt: #f8f9fa;                              /* content.tables.row_alt_bg */
+        --table-border: #dee2e6;                               /* content.tables.border */
+        
+        /* شارات الحالة */
+        --badge-draft-bg: #e2e3e5;                             /* content.status_badges.draft.bg */
+        --badge-draft-text: #41464b;                           /* content.status_badges.draft.text */
+        --badge-paid-bg: #d1e7dd;                              /* content.status_badges.paid.bg */
+        --badge-paid-text: #0f5132;                            /* content.status_badges.paid.text */
+        --badge-unpaid-bg: #f8d7da;                            /* content.status_badges.unpaid.bg */
+        --badge-unpaid-text: #842029;                          /* content.status_badges.unpaid.text */
+        
+        /* حقول الإدخال العادية */
+        --input-bg: #ffffff;                                   /* content.inputs.bg */
+        --input-text: #495057;                                 /* content.inputs.text */
+        --input-radius: 6px;                                   /* content.inputs.border.radius */
+        --input-border-color: #ced4da;                         /* content.inputs.border.color */
+    }
+
+    /* التنسيقات الهيكلية للمستند الورقي */
+    .invoice-paper-wrapper {
+        font-family: var(--main-font, 'Cairo', sans-serif) !important;
+        background-color: var(--content-bg);
+        padding: 40px 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    /* جسم الورقة */
+    .invoice-paper {
+        background-color: var(--paper-bg);
+        width: 100%;
+        max-width: 850px;
+        min-height: 1050px;
+        border-radius: var(--paper-radius);
+        box-shadow: var(--paper-shadow);
+        padding: 60px;
+        box-sizing: border-box;
+        position: relative;
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+    }
+
+    /* ترويسة الورقة */
+    .paper-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 2px solid var(--table-header-bg);
+        padding-bottom: 30px;
+        margin-bottom: 40px;
+    }
+    .company-logo-section h1 {
+        color: var(--table-header-bg);
+        margin: 0 0 5px 0;
+        font-size: 28px;
+        font-weight: 800;
+    }
+    .company-logo-section p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+    .document-details {
+        text-align: left;
+    }
+    .document-details h2 {
+        margin: 0 0 10px 0;
+        color: var(--text-color);
+        font-size: 22px;
+        font-weight: 700;
+    }
+    .meta-line {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+
+    /* شارات الحالات التلقائية */
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .status-badge.draft { background-color: var(--badge-draft-bg); color: var(--badge-draft-text); }
+    .status-badge.paid { background-color: var(--badge-paid-bg); color: var(--badge-paid-text); }
+    .status-badge.unpaid { background-color: var(--badge-unpaid-bg); color: var(--badge-unpaid-text); }
+
+    /* قسم أطراف المعاملة */
+    .parties-section {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+    .party-box {
+        width: 45%;
+    }
+    .party-box h4 {
+        margin: 0 0 10px 0;
+        color: var(--table-header-bg);
+        font-size: 14px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+    
+    /* حقول الإدخال النظيفة داخل الورقة */
+    .paper-input {
+        width: 100%;
+        border: 1px solid var(--input-border-color);
+        border-radius: var(--input-radius);
+        background-color: var(--input-bg);
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--input-text);
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    .paper-input:focus {
+        border-color: var(--link-color);
+    }
+
+    /* جدول المواد والبنود */
+    .paper-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        text-align: right;
+    }
+    .paper-table th {
+        background-color: var(--table-header-bg);
+        color: var(--table-header-text);
+        padding: 12px 8px;
+        font-size: 14px;
+        font-weight: 700;
+        border: 1px solid var(--table-border);
+    }
+    .paper-table td {
+        border: 1px solid var(--table-border);
+        padding: 14px 8px;
+        font-size: 14px;
+        background-color: var(--table-row-bg);
+        color: var(--text-color);
+    }
+    .paper-table tr:nth-child(even) td {
+        background-color: var(--table-row-alt);
+    }
+    
+    /* تذييل الورقة المالي */
+    .paper-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 60px;
+    }
+    .terms-box {
+        width: 50%;
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+    .terms-box a {
+        color: var(--link-color);
+        text-decoration: none;
+    }
+    .terms-box a:hover {
+        color: var(--link-hover);
+    }
+    .paper-totals {
+        width: 35%;
+    }
+    .paper-total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+    .paper-total-row.final {
+        border-top: 2px solid var(--table-header-bg);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-color);
+        padding-top: 12px;
+    }
+
+    /* شريط أزرار العمليات العائم */
+    .floating-action-bar {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--paper-bg);
+        padding: 10px 24px;
+        border-radius: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        z-index: 1000;
+    }
+    .btn-main {
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .btn-main:hover {
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-text);
+    }
+
+    </style>
+
+
+<div class="invoice-paper-wrapper">
+    
+    <article class="invoice-paper">
+        
+        <div class="paper-header">
+            <div class="company-logo-section">
+                <h1>مؤسسة مدار للأنظمة</h1>
+                <p>صنعاء، الجمهورية اليمنية</p>
+            </div>
+            <div class="document-details">
+                <h2>فاتورة مبيعات</h2>
+                <div class="meta-line">الرقم: <span style="font-weight: 600;">INV-2026-001</span></div>
+                <div class="meta-line">التاريخ: 2026-05-20</div>
+            </div>
+        </div>
+
+        <div class="parties-section">
+            <div class="party-box">
+                <h4>جهة العميل (المشتري)</h4>
+                <input type="text" class="paper-input" value="شركة رؤية الاستثمارية للتجارة">
+                <input type="text" class="paper-input" value="الرقم الضريبي: 300049582200003" style="margin-top: 8px;">
+            </div>
+            <div class="party-box" style="text-align: left;">
+                <h4 style="text-align: right;">شروط وتفاصيل الشحن</h4>
+                <input type="text" class="paper-input" value="طريقة الدفع: آجـل" style="text-align: left;">
+                <input type="text" class="paper-input" value="تاريخ الاستحقاق: 2026-06-20" style="margin-top: 8px; text-align: left;">
+            </div>
+        </div>
+
+        <table class="paper-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%">الرقم</th>
+                    <th style="width: 52%">وصف الخدمة / المنتج</th>
+                    <th style="width: 10%; text-align: center;">الكمية</th>
+                    <th style="width: 15%; text-align: left;">سعر الوحدة</th>
+                    <th style="width: 15%; text-align: left;">الإجمالي</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td>بناء وتخصيص واجهات ونظام المحاسبة الشامل (مدار)</td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: left;">250,000</td>
+                    <td style="text-align: left; font-weight: 600;">250,000</td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>تثبيت خادم محلي مدمج وحماية قواعد البيانات</td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: left;">50,000</td>
+                    <td style="text-align: left; font-weight: 600;">50,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="paper-footer">
+            <div class="terms-box">
+                <p style="font-weight: bold; margin-bottom: 5px; color: var(--text-main);">ملاحظات وشروط الدفع:</p>
+                <p>تعتبر هذه الفاتورة مستحقة السداد بالكامل في التاريخ المحدد أعلاه. يتم تقديم خدمات الدعم الفني والصيانة مجاناً لمدة عام كامل من تاريخ إصدار المستند.</p>
+            </div>
+            <div class="paper-totals">
+                <div class="paper-total-row">
+                    <span>المجموع الفرعي:</span>
+                    <span>300,000</span>
+                </div>
+                <div class="paper-total-row">
+                    <span>الضريبة (15%):</span>
+                    <span>45,000</span>
+                </div>
+                <div class="paper-total-row final">
+                    <span>الصافي المستحق:</span>
+                    <span>345,000 YER</span>
+                </div>
+            </div>
+        </div>
+
+    </article>
+
+    <div class="floating-action-bar">
+        <button class="btn-main" style="padding: 12px 30px; border-radius: 20px;">
+            <i class="fas fa-print"></i> حفظ واعتماد الفاتورة للطباعة
+        </button>
+    </div>
+
+</div>
+
