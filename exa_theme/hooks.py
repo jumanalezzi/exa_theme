@@ -1,7 +1,7 @@
 app_name = "exa_theme"
-app_title = "Etqan"
+app_title = "Exa Theme"
 app_publisher = "juman alezzi"
-app_description = "Etqan System - ERP UI Wrapper"
+app_description = "Exa ERP UI theme. Product name and logos come from exa_app (exa_app/branding.py)."
 app_email = "jumanalezzi@gmail.com"
 app_license = "mit"
 # 1. تحديد الصفحة الرئيسية للتطبيق برمجياً
@@ -16,7 +16,8 @@ login_redirect_url = "/madar"
 # Apps
 # ------------------
 
-# required_apps = []
+# exa_app owns the branding (name, logos) that this theme displays
+required_apps = ["exa_app"]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [

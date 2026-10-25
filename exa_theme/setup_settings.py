@@ -1,32 +1,6 @@
 import frappe
-import os
+from exa_theme.branding import get_madar_branding
 from exa_theme.license_core import verify_app_license
-
-def _upload_default_logo(file_name):
-    app_img_path = frappe.get_app_path('exa_theme', 'public', 'img', file_name)
-    if not os.path.exists(app_img_path):
-        return None
-        
-    file_url = f"/private/files/{file_name}"
-    
-    if frappe.db.exists("File", {"file_url": file_url}):
-        return file_url
-        
-    try:
-        with open(app_img_path, 'rb') as f:
-            file_content = f.read()
-            
-        file_doc = frappe.get_doc({
-            "doctype": "File",
-            "file_name": file_name,
-            "is_private": 1,
-            "content": file_content
-        })
-        file_doc.insert(ignore_permissions=True)
-        return file_doc.file_url
-    except Exception as e:
-        print(f"Error saving {file_name}: {e}")
-        return None
 
 @frappe.whitelist()
 def initialize_madar_settings():
@@ -143,26 +117,12 @@ def initialize_madar_settings():
         
     needs_update = False
     
-    if not settings_doc.app_name_ar:
-        settings_doc.app_name_ar = "إتقان"
-        needs_update = True
-        
-    if not settings_doc.app_name_en:
-        settings_doc.app_name_en = "Etqan"
-        needs_update = True
-        
-    if not settings_doc.light_logo:
-        light_url = _upload_default_logo("Light Logo.png")
-        if light_url:
-            settings_doc.light_logo = light_url
+    # الاسم والشعارات تأتي من exa_app (مصدر واحد للعلامة التجارية)
+    for fieldname, value in get_madar_branding().items():
+        if settings_doc.get(fieldname) != value:
+            settings_doc.set(fieldname, value)
             needs_update = True
-            
-    if not settings_doc.dark_logo:
-        dark_url = _upload_default_logo("Dark Logo.png")
-        if dark_url:
-            settings_doc.dark_logo = dark_url
-            needs_update = True
-            
+
     if needs_update or settings_doc.is_new():
         settings_doc.flags.ignore_permissions = True
         if settings_doc.is_new():

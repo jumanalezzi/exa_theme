@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 import json
+from exa_theme.branding import apply_branding, get_madar_branding
 from exa_theme.license_core import verify_app_license
 
 def get_context(context):
@@ -70,14 +71,11 @@ def get_context(context):
 def ensure_settings_exists():
     """تتأكد من وجود مستند Single وإنشاؤه إن لم يوجد"""
     if not frappe.db.exists("Madar Settings", "Madar Settings"):
-        doc = frappe.get_doc({
-            "doctype": "Madar Settings",
-            "app_name_ar": "إتقان",
-             "app_name_en": "Etqan"
-        })
+        doc = frappe.get_doc({"doctype": "Madar Settings", **get_madar_branding()})
         doc.insert(ignore_permissions=True)
         frappe.db.commit()
-    return frappe.get_doc("Madar Settings")
+    # الاسم والشعارات تأتي دائماً من exa_app، مهما كان المحفوظ في الإعدادات
+    return apply_branding(frappe.get_doc("Madar Settings"))
 
 def get_user_preferences():
     user = frappe.session.user

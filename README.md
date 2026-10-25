@@ -1,6 +1,6 @@
-### Etqan
+### Exa Theme
 
-Etqan System - ERP UI Wrapper with POS Integration
+Exa ERP UI theme with POS Integration
 
 ### Installation
 
