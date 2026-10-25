@@ -9,12 +9,29 @@
 	}
 }
 
-/* Standard filter fields share one row instead of wrapping early */
-.page-form.flex {
-	flex-wrap: wrap;
-	row-gap: 8px;
-}
-.page-form .standard-filter-section {
-	flex: 1 1 auto;
-	flex-wrap: wrap;
+/* List filter bar: the standard filter fields share one row with the Filter / sort buttons.
+   Frappe gives each field a fixed col-md-2 (1/6) width, so six fields plus margins spill onto a
+   second line; here they shrink to share the row and only wrap when there are too many to fit. */
+@media (min-width: 992px) {
+	.page-form.flex {
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+	.page-form .standard-filter-section {
+		flex: 1 1 auto;
+		flex-wrap: wrap;
+		row-gap: 8px;
+		min-width: 0;
+	}
+	.page-form .standard-filter-section > .form-group {
+		flex: 1 1 130px;
+		max-width: 220px;
+		min-width: 110px;
+		width: auto;
+	}
+	.page-form .filter-section {
+		flex: 0 0 auto;
+		width: auto;
+		max-width: none;
+	}
 }
