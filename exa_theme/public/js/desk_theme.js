@@ -12,6 +12,25 @@
 	})();
 	if (in_madar_frame) return;
 
+	// ---------- Home → /madar ----------
+	// ERPNext's default Home workspace is replaced by the Madar dashboard; every other page stays in /app.
+	// Checked before the desk renders so the default Home never flashes on screen.
+	if (/^\/app(\/home)?\/?$/i.test(window.location.pathname)) {
+		window.location.replace("/madar");
+		return;
+	}
+
+	function is_home_route(route) {
+		if (!route || !route.length) return true; // /app
+		return route[0] === "Workspaces" && (!route[1] || String(route[1]).toLowerCase() === "home");
+	}
+
+	function leave_default_home() {
+		if (window.frappe && frappe.get_route && is_home_route(frappe.get_route())) {
+			window.location.replace("/madar");
+		}
+	}
+
 	const SIDEBAR_KEY = "exa_list_sidebar_open";
 	// Only Google Fonts stylesheets may be loaded; a font URL is stored by users, so anything else is ignored
 	const FONT_URL = /^https:\/\/fonts\.googleapis\.com\//;
@@ -347,6 +366,8 @@
 
 	$(document).ready(() => {
 		if (!window.frappe || !frappe.boot || frappe.session.user === "Guest") return;
+		// Clicking Home or the logo inside the desk changes the route without a page load
+		frappe.router?.on("change", leave_default_home);
 		default_full_width();
 		apply_sidebar_state();
 		load_and_apply()

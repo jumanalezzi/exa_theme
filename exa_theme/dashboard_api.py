@@ -2,6 +2,21 @@ import frappe
 from frappe import _
 from frappe.utils import today, getdate, date_diff, add_days, flt, add_months, get_first_day, get_last_day
 
+def resolve_company(company):
+    """The dashboard sums ledger rows with raw SQL, which skips User Permissions, so keep it to the
+    companies the user may see. Returns None (all companies) only for users without a restriction."""
+    from frappe.core.doctype.user_permission.user_permission import get_permitted_documents
+
+    permitted = get_permitted_documents("Company")
+    if not permitted:
+        return company or None
+    if company:
+        if company not in permitted:
+            frappe.throw(_("You are not permitted to view the dashboard for company {0}").format(company), frappe.PermissionError)
+        return company
+    default = frappe.defaults.get_user_default("Company")
+    return default if default in permitted else permitted[0]
+
 def check_permission(doctype):
     try:
         return frappe.has_permission(doctype, "read")
@@ -112,12 +127,7 @@ def get_percentage_change(current, previous):
 
 @frappe.whitelist()
 def get_dashboard_data(company=None, filter_type=None, from_date=None, to_date=None):
-    # DEBUG LOG
-    try:
-        with open("/tmp/dashboard_debug.txt", "a") as f:
-            f.write(f"API Called - company: '{company}', filter_type: '{filter_type}'\n")
-    except Exception:
-        pass
+    company = resolve_company(company)
 
     # إذا كانت company فارغة، نعتبرها (جميع الشركات)
     # لحساب التواريخ
@@ -633,16 +643,9 @@ def check_dashboard_updates():
         # Get the latest modified timestamp from GL Entry
         result = frappe.db.sql("SELECT MAX(modified) as last_mod FROM `tabGL Entry`", as_dict=True)
         if result and result[0].last_mod:
-            val = str(result[0].last_mod)
-            with open("/tmp/poll_debug.txt", "a") as f:
-                f.write(f"POLL SUCCESS: {val}\n")
-            return val
-        with open("/tmp/poll_debug.txt", "a") as f:
-            f.write("POLL NONE\n")
+            return str(result[0].last_mod)
         return "none"
-    except Exception as e:
-        with open("/tmp/poll_debug.txt", "a") as f:
-            f.write(f"POLL ERROR: {str(e)}\n")
+    except Exception:
         return "error"
 
 @frappe.whitelist()
