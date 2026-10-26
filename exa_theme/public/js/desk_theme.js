@@ -69,8 +69,88 @@
 		const disabled_bg = dark ? "rgba(255, 255, 255, 0.04)" : "#f8fafc";
 		const disabled_border = dark ? "rgba(255, 255, 255, 0.12)" : "#e2e8f0";
 		const card_border = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)";
+		const colors = data.colors || {};
+		const header = colors.header || {};
+		const header_btn = header.buttons || {};
+		const side = (colors.sidebar && colors.sidebar.level_1) || {};
+		const nav_bg = header.bg || surface;
+		// A coloured header (e.g. Ocean Blue's dark blue) needs a light tint for the search box
+		const [r, g, b] = hex_to_rgb(nav_bg).split(",").map(Number);
+		const nav_is_dark = 0.299 * r + 0.587 * g + 0.114 * b < 140;
+		const nav_text = header.text || text;
+		const nav_icon = header_btn.text || muted;
+		const nav_hover_bg = header_btn.hover_bg || `rgba(${rgb}, 0.08)`;
+		const nav_hover_text = header_btn.hover_text || primary;
+		const side_bg = side.bg || "transparent";
+		const side_text = side.text || text;
+		const side_hover_bg = side.hover_bg || `rgba(${rgb}, 0.08)`;
+		const side_hover_text = side.hover_text || primary;
+		const side_active_bg = side.active_bg || `rgba(${rgb}, 0.12)`;
+		const side_active_text = side.active_text || primary;
 
 		return `
+			/* ---- top navbar: theme "header" colours ---- */
+			:root { --navbar-bg: ${nav_bg}; }
+			.navbar, header.navbar {
+				background-color: ${nav_bg} !important;
+				border-bottom: 1px solid ${border} !important;
+			}
+			.navbar .navbar-brand, .navbar #navbar-breadcrumbs a, .navbar #navbar-breadcrumbs span {
+				color: ${nav_text} !important;
+			}
+			.navbar .nav-link, .navbar .navbar-nav .icon, .navbar .btn-reset {
+				color: ${nav_icon} !important;
+				--icon-stroke: ${nav_icon};
+			}
+			.navbar .nav-link:hover, .navbar .btn-reset:hover {
+				background-color: ${nav_hover_bg} !important;
+				color: ${nav_hover_text} !important;
+			}
+			.navbar .search-bar .form-control, .navbar #navbar-search {
+				background-color: ${nav_is_dark ? "rgba(255, 255, 255, 0.14)" : "rgba(0, 0, 0, 0.04)"} !important;
+				color: ${nav_text} !important;
+				border-color: transparent !important;
+			}
+			.navbar #navbar-search::placeholder { color: ${nav_text} !important; opacity: 0.7; }
+
+			/* ---- workspace sidebar: theme "sidebar level 1" colours ---- */
+			.desk-sidebar, .layout-side-section .list-sidebar {
+				background-color: ${side_bg} !important;
+				border-radius: 10px;
+			}
+			.desk-sidebar .standard-sidebar-item, .desk-sidebar .sidebar-item-label,
+			.desk-sidebar .standard-sidebar-item .item-anchor, .list-sidebar .sidebar-label,
+			.list-sidebar .group-by-dropdown .dropdown-toggle {
+				color: ${side_text} !important;
+				--icon-stroke: ${side_text};
+			}
+			.desk-sidebar .standard-sidebar-item:hover, .desk-sidebar .standard-sidebar-item:hover .item-anchor {
+				background-color: ${side_hover_bg} !important;
+				color: ${side_hover_text} !important;
+				--icon-stroke: ${side_hover_text};
+			}
+			.desk-sidebar .standard-sidebar-item.selected, .desk-sidebar .standard-sidebar-item.selected .item-anchor,
+			.desk-sidebar .standard-sidebar-item.selected .sidebar-item-label {
+				background-color: ${side_active_bg} !important;
+				color: ${side_active_text} !important;
+				font-weight: 600;
+				--icon-stroke: ${side_active_text};
+			}
+
+			/* ---- page head, headings, list and table headers ---- */
+			.page-head { background-color: var(--bg-color) !important; }
+			.page-head .title-text, h1, h2, h3, h4, h5, .widget-title, .head-title { color: ${text} !important; }
+			.list-row-head, .datatable .dt-header .dt-cell, .grid-heading-row, .report-wrapper .dt-header {
+				background-color: ${dark ? "rgba(255, 255, 255, 0.04)" : `rgba(${rgb}, 0.06)`} !important;
+				color: ${text} !important;
+			}
+			.list-row:hover, .list-row-container:hover .list-row, .datatable .dt-row:hover .dt-cell {
+				background-color: rgba(${rgb}, ${dark ? "0.10" : "0.05"}) !important;
+			}
+			a.list-row-col.bold, .list-subject a, .form-link, .control-value a { color: ${primary} !important; }
+			input[type="checkbox"]:checked { background-color: ${primary} !important; border-color: ${primary} !important; }
+
+			/* ---- colour variables used across the desk ---- */
 			:root, [data-theme="light"], [data-theme="dark"] {
 				--page-bg: ${page_bg}; --bg-color: ${page_bg}; --bg-light: ${page_bg}; --bg-dark: ${surface};
 				--fg-color: ${surface}; --card-bg: ${surface}; --modal-bg: ${surface}; --navbar-bg: ${surface};
