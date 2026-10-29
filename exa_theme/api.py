@@ -959,3 +959,61 @@ def restore_default_menu():
     except Exception as e:
         frappe.log_error("Madar Restore Menu Error", str(e))
         return "error"
+
+
+@frappe.whitelist(allow_guest=True)
+def check_route_exists(route):
+    """
+    Checks if a given /app route exists in ERPNext / Frappe.
+    Returns: {"exists": True/False, "route": route}
+    """
+    if not route:
+        return {"exists": False}
+
+    r = str(route).strip('/').lower()
+    if r.startswith('app/'):
+        r = r[4:]
+    elif r == 'app' or r == '':
+        return {"exists": True}
+
+    parts = r.split('/')
+    first = parts[0]
+
+    # 1. Fixed Madar routes
+    if first in ['home', 'madar-theme-settings', 'madar-font-settings', 'madar-system-settings', 'madar-menu-settings']:
+        return {"exists": True}
+
+    # 2. Check Page doctype
+    if frappe.db.exists("Page", {"name": first}) or frappe.db.exists("Page", {"page_name": first}):
+        return {"exists": True}
+
+    # 3. Check Workspace doctype
+    if frappe.db.exists("Workspace", {"name": first}):
+        return {"exists": True}
+    workspaces = frappe.get_all("Workspace", fields=["name", "title"])
+    for w in workspaces:
+        if frappe.scrub(w.name).replace('_', '-') == first or frappe.scrub(w.title or '').replace('_', '-') == first:
+            return {"exists": True}
+
+    # 4. Check DocType (direct slug, or List/Form/Tree/Report prefix)
+    doctype_candidate = None
+    if first in ['list', 'form', 'report', 'tree'] and len(parts) > 1:
+        doctype_candidate = parts[1]
+    else:
+        doctype_candidate = first
+
+    if frappe.db.exists("DocType", {"name": doctype_candidate}):
+        return {"exists": True}
+
+    all_dt = frappe.get_all("DocType", fields=["name"])
+    for d in all_dt:
+        if frappe.scrub(d.name).replace('_', '-') == doctype_candidate or d.name.lower() == doctype_candidate.lower():
+            return {"exists": True}
+
+    # 5. Check Report doctype
+    if first in ['query-report', 'report'] and len(parts) > 1:
+        rep_candidate = parts[-1]
+        if frappe.db.exists("Report", {"name": rep_candidate}):
+            return {"exists": True}
+
+    return {"exists": False}

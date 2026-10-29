@@ -6,7 +6,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             
-            <a href="/madar" style="text-decoration: none; color: inherit;">
+            <a href="/exa" style="text-decoration: none; color: inherit;">
                 <div class="brand-section d-flex align-items-center">
                     <img id="main-logo" src="{{ settings.light_logo if user_pref.madar_theme == 'Light' else settings.dark_logo }}" 
                          class="app-logo" alt="Logo">
@@ -16,7 +16,7 @@
 
             {% if "posawesome" in installed_apps %}
             <!-- أيقونة عربة التسوق لنقطة البيع -->
-            <a href="/madar?route=app%2Fposapp" onclick="event.preventDefault(); window.history.pushState({ route: 'app/posapp' }, '', '/madar?route=app%2Fposapp'); MadarRouter.handleCurrentRoute();" id="madar-pos-cart-icon" class="btn btn-header-action ms-3 ms-md-4 d-flex align-items-center" title="نقطة البيع">
+            <a href="/exa?route=app%2Fposapp" onclick="event.preventDefault(); window.history.pushState({ route: 'app/posapp' }, '', '/exa?route=app%2Fposapp'); MadarRouter.handleCurrentRoute();" id="madar-pos-cart-icon" class="btn btn-header-action ms-3 ms-md-4 d-flex align-items-center" title="نقطة البيع">
                 <i class="fas fa-shopping-cart" style="font-size: 1.1rem;"></i>
                 <style>
                     @media (min-width: 768px) { #madar-pos-cart-icon i { font-size: 1.4rem !important; } }

@@ -16,6 +16,27 @@
 
     <div id="customContentContainer" class="display-view" style="display: none; position: relative; z-index: 2; height: 100%; width: 100%; overflow-y: auto; overflow-x: hidden; background-color: var(--bg-color);"></div>
 
+    <!-- 404 Not Found View -->
+    <div id="madar404Container" class="display-view madar-404-view" style="display: none; position: relative; z-index: 4; height: 100%; width: 100%; overflow-y: auto;">
+        <div class="madar-404-wrapper">
+            <div class="madar-404-card">
+                <div class="madar-404-badge">404</div>
+                <div class="madar-404-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2 class="madar-404-title">عفواً، الصفحة المطلوبة غير موجودة</h2>
+                <p class="madar-404-desc">الصفحة <code id="madar404RouteText">/404</code> غير متوفرة في النظام أو قد تم نقلها أو حذفها.</p>
+                <div class="madar-404-actions">
+                    <button type="button" class="btn btn-primary madar-404-btn" onclick="MadarRouter.goHome()">
+                        <i class="fa-solid fa-house me-1"></i> العودة للرئيسية
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary madar-404-btn" onclick="window.history.back()">
+                        <i class="fa-solid fa-arrow-right me-1"></i> الصفحة السابقة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
     </div>
-    

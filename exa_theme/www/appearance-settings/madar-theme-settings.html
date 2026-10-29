@@ -503,7 +503,7 @@
           let enName = $('#newThemeEn').val().trim() || 'Theme Preview';
           let jsonTheme = getFormColorsJson(arName, enName);
           localStorage.setItem('madar_preview_theme', jsonTheme);
-          window.open('/madar?preview_theme=true', '_blank');
+          window.open('/exa?preview_theme=true', '_blank');
       });
       
       $('#aiGenerateBtn').click(() => fetchAiSuggestion(false));

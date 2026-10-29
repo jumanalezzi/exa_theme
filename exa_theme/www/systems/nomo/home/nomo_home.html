@@ -192,20 +192,20 @@
             <!-- Action Buttons (Right in RTL -> first in DOM) -->
             <div class="nomo-buttons-block">
                 <!-- POS Button (Rightmost) -->
-                <button class="nomo-btn-huge" onclick="document.getElementById('madar-pos-cart-icon') ? document.getElementById('madar-pos-cart-icon').click() : (window.history.pushState({ route: 'app/posapp' }, '', '/madar?route=app%2Fposapp'), MadarRouter.handleCurrentRoute())">
+                <button class="nomo-btn-huge" onclick="document.getElementById('madar-pos-cart-icon') ? document.getElementById('madar-pos-cart-icon').click() : (window.history.pushState({ route: 'app/posapp' }, '', '/exa?route=app%2Fposapp'), MadarRouter.handleCurrentRoute())">
                     نقطة البيع <i class="fa fa-shopping-cart"></i>
                 </button>
                 
                 <!-- Control Panel (Middle) -->
-                <button class="nomo-btn-large" onclick="window.history.pushState({ route: 'app/accounting' }, '', '/madar?route=app%2Faccounting'); MadarRouter.handleCurrentRoute();">
+                <button class="nomo-btn-large" onclick="window.history.pushState({ route: 'app/accounting' }, '', '/exa?route=app%2Faccounting'); MadarRouter.handleCurrentRoute();">
                     لوحة التحكم
                 </button>
                 
                 <!-- Stacked Buttons (Leftmost) -->
                 <div class="nomo-btn-stacked">
                     <button class="nomo-btn-small" style="opacity: 0.6; cursor: not-allowed;" onclick="return false;" title="قريباً">الإقرار الضريبي</button>
-                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/General Ledger' }, '', '/madar?route=query-report%2FGeneral%20Ledger'); MadarRouter.handleCurrentRoute();">دفتر الأستاذ العام</button>
-                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/Profit and Loss Statement' }, '', '/madar?route=query-report%2FProfit%20and%20Loss%20Statement'); MadarRouter.handleCurrentRoute();">الربح والخساره</button>
+                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/General Ledger' }, '', '/exa?route=query-report%2FGeneral%20Ledger'); MadarRouter.handleCurrentRoute();">دفتر الأستاذ العام</button>
+                    <button class="nomo-btn-small" onclick="window.history.pushState({ route: 'query-report/Profit and Loss Statement' }, '', '/exa?route=query-report%2FProfit%20and%20Loss%20Statement'); MadarRouter.handleCurrentRoute();">الربح والخساره</button>
                 </div>
             </div>
             
@@ -279,7 +279,7 @@ function loadNomoFavorites() {
         const card = document.createElement('div');
         card.className = 'nomo-fav-card';
         card.onclick = () => {
-            window.history.pushState({ route: route }, '', '/madar?route=' + encodeURIComponent(route));
+            window.history.pushState({ route: route }, '', '/exa?route=' + encodeURIComponent(route));
             if (window.MadarRouter) {
                 window.MadarRouter.handleCurrentRoute();
             }

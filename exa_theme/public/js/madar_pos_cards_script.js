@@ -478,8 +478,8 @@ function applyMadarSkin() {
 }
 
 function checkPosAwesomeRoute() {
-    const isMadar = window.location.pathname.startsWith('/madar') || 
-                   (window.parent && window.parent.location.pathname.startsWith('/madar'));
+    const isMadar = window.location.pathname.startsWith('/exa') || window.location.pathname.startsWith('/madar') || 
+                   (window.parent && (window.parent.location.pathname.startsWith('/exa') || window.parent.location.pathname.startsWith('/madar')));
                    
     if (!isMadar) {
         document.body.classList.remove('madar-pos-skin');
@@ -545,14 +545,14 @@ function setupPosAwesomeHomeNavigation() {
             console.log("🚀 تم النقر على زر الرجوع للرئيسية، جاري العودة لصفحة مدار الرئيسية...");
             
             if (window.parent && window.parent !== window && window.parent.MadarRouter) {
-                const newUrl = `${window.parent.location.origin}/madar?route=app%2Fhome`;
+                const newUrl = `${window.parent.location.origin}/exa?route=app%2Fhome`;
                 window.parent.history.pushState({ route: 'app/home' }, '', newUrl);
                 window.parent.MadarRouter.updatePosMode('app/home');
                 window.parent.MadarRouter.handleCurrentRoute();
             } else if (window.frappe && frappe.set_route) {
                 frappe.set_route('app/home');
             } else {
-                window.location.href = '/madar?route=app%2Fhome';
+                window.location.href = '/exa?route=app%2Fhome';
             }
         }
     }, true);

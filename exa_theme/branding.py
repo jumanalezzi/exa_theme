@@ -1,4 +1,14 @@
-from exa_app.branding import get_branding
+try:
+	from exa_app.branding import get_branding
+except ImportError:
+	def get_branding():
+		return {
+			"app_name_ar": "إكسا",
+			"app_name": "Exa",
+			"logo_light": "/assets/exa_theme/images/logo-light.png",
+			"logo_dark": "/assets/exa_theme/images/logo-dark.png",
+			"favicon": "/assets/exa_theme/images/favicon.png",
+		}
 
 
 def get_madar_branding():

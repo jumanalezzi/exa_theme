@@ -9,10 +9,10 @@ function handleLogout() {
     fetch('/?cmd=logout')
         .then(() => {
             // استخدام replace لضمان عدم تمكن المستخدم من العودة للخلف (Back)
-            window.location.replace("/login?redirect-to=/madar");
+            window.location.replace("/login?redirect-to=/exa");
         })
         .catch(() => {
             // في حال حدوث خطأ في الشبكة مثلاً، نضمن الخروج أيضاً
-            window.location.replace("/login?redirect-to=/madar");
+            window.location.replace("/login?redirect-to=/exa");
         });
 }

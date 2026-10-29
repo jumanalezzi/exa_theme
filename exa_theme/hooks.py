@@ -6,12 +6,17 @@ app_email = "jumanalezzi@gmail.com"
 app_license = "mit"
 # Users work in the standard desk (/app), which desk_theme.js/css style directly.
 # /madar stays available as an optional page but is no longer forced as home or after login.
-# home_page = "madar"
-# login_redirect_url = "/madar"
+home_page = "exa"
+login_redirect_url = "/exa"
 
 # 3. إجبار النظام على التوجه لمدار بعد تسجيل الخروج 
 # (ومنه سيتم سحبه للوجن لأن الجلسة انتهت)
-#logout_redirect_url = "/madar"
+logout_redirect_url = "/exa"
+
+website_route_rules = [
+	{"from_route": "/", "to_route": "exa"},
+	{"from_route": "/madar", "to_route": "exa"},
+]
 # Apps
 # ------------------
 
@@ -465,7 +470,11 @@ after_migrate = [
 
 app_include_js = [
 	"/assets/exa_theme/js/madar_pos_cards_script.js",
-	"/assets/exa_theme/js/desk_theme.js",
+	"/assets/exa_theme/js/desk_theme.js?v=20261030_1",
+]
+
+update_website_context = [
+	"exa_theme.routing.redirect_top_level_app",
 ]
 app_include_css = [
 	"/assets/exa_theme/css/madar_pos_cards_theme.css",

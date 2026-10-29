@@ -5,18 +5,83 @@
 (function () {
 	const in_madar_frame = (() => {
 		try {
-			return window.parent !== window && window.parent.location.pathname.startsWith("/madar");
+			if (window.self !== window.top) return true;
+			const p = window.parent && window.parent.location.pathname; return window.parent !== window && p && (p.startsWith("/exa") || p.startsWith("/madar"));
 		} catch (e) {
-			return false;
+			return true;
 		}
 	})();
-	if (in_madar_frame) return;
 
-	// ---------- Home → /madar ----------
-	// ERPNext's default Home workspace is replaced by the Madar dashboard; every other page stays in /app.
-	// Checked before the desk renders so the default Home never flashes on screen.
-	if (/^\/app(\/home)?\/?$/i.test(window.location.pathname)) {
-		window.location.replace("/madar");
+	if (in_madar_frame) {
+		// داخل الفريم: منع أي رسائل أو نوافذ منبثقة 404 وتوجيهها لشاشة مدار المصممة
+		function install404Interceptor() {
+			if (!window.frappe) return;
+
+			// 1. اعتراض frappe.show_not_found
+			const orig_show_not_found = frappe.show_not_found;
+			frappe.show_not_found = function(page_name) {
+				try {
+					if (window.parent && (window.parent.ExaRouter || window.parent.MadarRouter) && typeof (window.parent.ExaRouter || window.parent.MadarRouter).show404 === 'function') {
+						const route = page_name || (frappe.get_route_str ? frappe.get_route_str() : window.location.pathname);
+						(window.parent.ExaRouter || window.parent.MadarRouter).show404(route);
+						return;
+					}
+				} catch (e) {}
+				if (orig_show_not_found) orig_show_not_found.apply(this, arguments);
+			};
+
+			// 2. اعتراض frappe.msgprint لمنع النافذة المنبثقة "لم يتم العثور على"
+			const orig_msgprint = frappe.msgprint;
+			frappe.msgprint = function(msg, title) {
+				let msg_str = '';
+				let title_str = '';
+				if (typeof msg === 'string') {
+					msg_str = msg;
+				} else if (msg && typeof msg === 'object') {
+					msg_str = msg.message || '';
+					title_str = msg.title || '';
+				}
+				if (typeof title === 'string') title_str = title;
+
+				const is_not_found = 
+					msg_str.includes('not available') || 
+					msg_str.includes('غير متاح') || 
+					msg_str.includes('does not exist') || 
+					msg_str.includes('غير موجود') ||
+					title_str.includes('Not found') ||
+					title_str.includes('لم يتم العثور على');
+
+				if (is_not_found) {
+					try {
+						if (window.parent && (window.parent.ExaRouter || window.parent.MadarRouter) && typeof (window.parent.ExaRouter || window.parent.MadarRouter).show404 === 'function') {
+							const route = (frappe.get_route_str ? frappe.get_route_str() : '') || window.location.pathname;
+							(window.parent.ExaRouter || window.parent.MadarRouter).show404(route);
+							return null;
+						}
+					} catch (e) {}
+				}
+				return orig_msgprint ? orig_msgprint.apply(this, arguments) : null;
+			};
+		}
+
+		if (window.frappe) install404Interceptor();
+		$(document).ready(install404Interceptor);
+		return;
+	}
+
+	// ---------- خارج الفريم: إعادة توجيه /app وكل صفحاتها تلقائياً إلى /madar ----------
+	const pathname = window.location.pathname;
+	if (/^\/app(\/home)?\/?$/i.test(pathname)) {
+		window.location.replace("/exa");
+		return;
+	}
+
+	if (pathname.startsWith("/app/")) {
+		const route = pathname.replace(/^\/+/, "");
+		const search = window.location.search || "";
+		const hash = window.location.hash || "";
+		const targetUrl = "/exa?route=" + encodeURIComponent(route) + (search ? (search.startsWith("?") ? "&" + search.substring(1) : search) : "") + hash;
+		window.location.replace(targetUrl);
 		return;
 	}
 
@@ -27,7 +92,7 @@
 
 	function leave_default_home() {
 		if (window.frappe && frappe.get_route && is_home_route(frappe.get_route())) {
-			window.location.replace("/madar");
+			window.location.replace("/exa");
 		}
 	}
 

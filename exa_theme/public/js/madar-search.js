@@ -275,11 +275,11 @@ window.handleSearchRoute = function(event, routeStr, isMenuRoute) {
             
             if (isMenuRoute) {
                 if (window.MadarRouter && typeof window.MadarRouter.handleCurrentRoute === 'function') {
-                    const newUrl = `${window.location.origin}/madar?route=${encodeURIComponent(decodedRoute)}`;
+                    const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(decodedRoute)}`;
                     window.history.pushState({ route: decodedRoute }, "", newUrl);
                     window.MadarRouter.handleCurrentRoute();
                 } else {
-                    window.location.href = `/madar?route=${encodeURIComponent(decodedRoute)}`;
+                    window.location.href = `/exa?route=${encodeURIComponent(decodedRoute)}`;
                 }
             } else {
                 let routeArray;

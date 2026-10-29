@@ -41,10 +41,10 @@ const MadarRouter = {
 
         this.updatePosMode(initialRoute);
 
-        if ((currentPath === "madar" || currentPath === "") && !hasRouteParam) {
+        if ((currentPath === "exa" || currentPath === "madar" || currentPath === "") && !hasRouteParam) {
             //if (frappe.session.user !== "Guest") {
                 const defaultRoute = "app/home";
-                const newUrl = `${window.location.origin}/madar?route=${encodeURIComponent(defaultRoute)}`;
+                const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(defaultRoute)}`;
                 
                 window.history.replaceState({ route: defaultRoute }, "", newUrl);
                 console.log("🚀 تم رصد دخول صافي، وتحويل المسار برمجياً إلى الرئيسية:", defaultRoute);
@@ -71,7 +71,7 @@ const MadarRouter = {
 
         if (currentRoute === 'app/pos-awesome' || currentRoute === 'pos-awesome') {
             currentRoute = 'app/posapp';
-            const newUrl = `${window.location.origin}/madar?route=app%2Fposapp`;
+            const newUrl = `${window.location.origin}/exa?route=app%2Fposapp`;
             window.history.replaceState({ route: 'app/posapp' }, '', newUrl);
         }
 
@@ -166,65 +166,128 @@ const MadarRouter = {
                 }
             }
         } else {
-            // توجيه المسار إلى الفريم الأصلي لفرابي
-            this.switchView('iframe');
-            if (iframeElement) {
-                const targetPath = '/' + currentRoute;
-                const iframeTargetUrl = `${window.location.origin}${targetPath}`;
-                const frappeRoute = currentRoute.replace(/^app\//, '');
-                
-                // فحص ما إذا كان الفريم حالياً في وضع شاشة نقطة البيع أو صفحة عادية
-                let isInsidePos = false;
-                try {
-                    if (iframeElement.contentWindow) {
-                        const win = iframeElement.contentWindow;
-                        const doc = win.document;
-                        const currentIframePath = win.location.pathname;
-                        if (currentIframePath.includes('posapp') || currentIframePath.includes('pos-awesome') || currentIframePath.includes('point-of-sale') || (doc.body && doc.body.classList.contains('madar-pos-skin'))) {
-                            isInsidePos = true;
-                        }
-                    }
-                } catch(e) {}
+            // التحقق مما إذا كان المسار موجوداً في فرابي/ERPNext قبل تضمينه في الفريم أو إظهار صفحة 404
+            this.checkAndRouteToIframe(currentRoute, iframeElement);
+        }
+    },
 
-                const targetIsPos = MadarRouter.isPosRoute(currentRoute);
+    routeValidityCache: {},
 
-                // إذا كنا ننتقل من أو إلى نقطة البيع، يجب إعادة تحميل الفريم لضمان نظافة DOM فرابي
-                if (isInsidePos || targetIsPos || !iframeElement.src || !iframeElement.contentWindow || !iframeElement.contentWindow.frappe) {
-                    if (iframeElement.src !== iframeTargetUrl) {
-                        iframeElement.src = iframeTargetUrl;
-                        console.log("🔄 تم إعادة شحن الفريم بالرابط الكامل:", iframeTargetUrl);
-                    }
-                } else {
-                    // كلا المسارين صفحات ديسك عادية: استخدام frappe.set_route للتنقل السريع
-                    try {
-                        if (iframeElement.contentWindow.frappe && typeof iframeElement.contentWindow.frappe.set_route === 'function') {
-                            iframeElement.contentWindow.frappe.set_route(frappeRoute);
-                            console.log("⚡ تم توجيه فرابي داخلياً عبر set_route إلى:", frappeRoute);
-                        } else {
-                            iframeElement.src = iframeTargetUrl;
-                        }
-                    } catch(e) {
-                        console.warn("تعذر التوجيه الداخلي، سيتم إعادة تحميل الفريم:", e);
-                        iframeElement.src = iframeTargetUrl;
-                    }
+    checkAndRouteToIframe: function(currentRoute, iframeElement) {
+        const me = this;
+        const normalized = (currentRoute || '').replace(/^\/+/, '');
+
+        if (normalized === 'app' || normalized === 'app/home' || normalized === 'home') {
+            this.renderIframe(normalized, iframeElement);
+            return;
+        }
+
+        if (this.routeValidityCache[normalized] !== undefined) {
+            if (this.routeValidityCache[normalized]) {
+                this.renderIframe(normalized, iframeElement);
+            } else {
+                this.show404(normalized);
+            }
+            return;
+        }
+
+        const csrfToken = (window.frappe && frappe.csrf_token) ? frappe.csrf_token : '';
+        fetch('/api/method/exa_theme.api.check_route_exists?route=' + encodeURIComponent(normalized), {
+            headers: {
+                'X-Frappe-CSRF-Token': csrfToken
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const resObj = data.message || {};
+            const exists = (typeof resObj === 'boolean') ? resObj : (resObj.exists === true);
+            me.routeValidityCache[normalized] = exists;
+            if (exists) {
+                me.renderIframe(normalized, iframeElement);
+            } else {
+                me.show404(normalized);
+            }
+        })
+        .catch(err => {
+            console.warn("تعذر التحقق من المسار، تجربة تضمين الفريم مباشرة:", err);
+            me.renderIframe(normalized, iframeElement);
+        });
+    },
+
+    renderIframe: function(currentRoute, iframeElement) {
+        this.switchView('iframe');
+        if (!iframeElement) return;
+
+        const targetPath = '/' + currentRoute;
+        const sep = targetPath.includes('?') ? '&' : '?';
+        const iframeTargetUrl = `${window.location.origin}${targetPath}${sep}in_exa=1&in_madar=1`;
+        const frappeRoute = currentRoute.replace(/^app\//, '');
+        
+        let isInsidePos = false;
+        try {
+            if (iframeElement.contentWindow) {
+                const win = iframeElement.contentWindow;
+                const doc = win.document;
+                const currentIframePath = win.location.pathname;
+                if (currentIframePath.includes('posapp') || currentIframePath.includes('pos-awesome') || currentIframePath.includes('point-of-sale') || (doc.body && doc.body.classList.contains('madar-pos-skin'))) {
+                    isInsidePos = true;
                 }
+            }
+        } catch(e) {}
+
+        const targetIsPos = MadarRouter.isPosRoute(currentRoute);
+
+        if (isInsidePos || targetIsPos || !iframeElement.src || !iframeElement.contentWindow || !iframeElement.contentWindow.frappe) {
+            if (iframeElement.src !== iframeTargetUrl) {
+                iframeElement.src = iframeTargetUrl;
+                console.log("🔄 تم إعادة شحن الفريم بالرابط الكامل:", iframeTargetUrl);
+            }
+        } else {
+            try {
+                if (iframeElement.contentWindow.frappe && typeof iframeElement.contentWindow.frappe.set_route === 'function') {
+                    iframeElement.contentWindow.frappe.set_route(frappeRoute);
+                    console.log("⚡ تم توجيه فرابي داخلياً عبر set_route إلى:", frappeRoute);
+                } else {
+                    iframeElement.src = iframeTargetUrl;
+                }
+            } catch(e) {
+                console.warn("تعذر التوجيه الداخلي، سيتم إعادة تحميل الفريم:", e);
+                iframeElement.src = iframeTargetUrl;
             }
         }
     },
 
-    // دالة الخداع البصري وإدارة الحاوية (محدثة لمنع الـ Crash)
+    show404: function(route) {
+        this.switchView('404');
+        const routeText = document.getElementById('madar404RouteText');
+        if (routeText) {
+            routeText.textContent = '/' + (route || '');
+        }
+        document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
+    },
+
+    goHome: function() {
+        const defaultRoute = "app/home";
+        const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(defaultRoute)}`;
+        window.history.pushState({ route: defaultRoute }, "", newUrl);
+        this.handleCurrentRoute();
+    },
+
+    // دالة الخداع البصري وإدارة الحاوية
     switchView: function(viewName) {
         const loader = document.getElementById('madarLoader');
         const iframe = document.getElementById('systemFrame');
         const custom = document.getElementById('customContentContainer');
+        const notFound = document.getElementById('madar404Container');
 
         if (loader) loader.style.display = 'none';
         if (custom) custom.style.display = 'none';
+        if (notFound) notFound.style.display = 'none';
         this.currentView = viewName;
         
-        // 🚨 [الحل الجذري]: منع display:none للفريم لأنها تدمر EditorJS
+        // منع display:none للفريم لضمان بقائه حياً
         if (iframe) {
-            iframe.style.display = 'block'; // يجب أن يكون block دائماً
+            iframe.style.display = 'block';
             iframe.style.position = 'absolute';
             iframe.style.top = '0';
             iframe.style.left = '0';
@@ -238,7 +301,7 @@ const MadarRouter = {
         if (viewName === 'loader' && loader) {
             loader.style.display = 'flex';
         } else if (viewName === 'iframe' && iframe) {
-            iframe.style.position = 'relative'; // عودة لوضعه الطبيعي
+            iframe.style.position = 'relative';
             iframe.style.opacity = '1';
             iframe.style.pointerEvents = 'auto';
             iframe.style.zIndex = '2';
@@ -246,6 +309,10 @@ const MadarRouter = {
             custom.style.display = 'block';
             custom.style.position = 'relative';
             custom.style.zIndex = '3';
+        } else if (viewName === '404' && notFound) {
+            notFound.style.display = 'flex';
+            notFound.style.position = 'relative';
+            notFound.style.zIndex = '4';
         }
     },
 
@@ -266,7 +333,7 @@ const MadarRouter = {
                     targetRoute = 'app/posapp';
                 }
 
-                const newUrl = `${window.location.origin}/madar?route=${encodeURIComponent(targetRoute)}`;
+                const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(targetRoute)}`;
                 window.history.pushState({ route: targetRoute }, "", newUrl);
                 
                 document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
@@ -451,13 +518,17 @@ const MadarRouter = {
                     }
 
                     let internalRoute = iframeElement.contentWindow.location.pathname.replace(/^\/+/,'');
+                    if (internalRoute === 'not-found' || internalRoute === 'app/not-found') {
+                        MadarRouter.show404(urlParams.get('route') || internalRoute);
+                        return;
+                    }
                     if (internalRoute === 'app' || internalRoute === '' || internalRoute === 'desk') {
                         internalRoute = 'app/home';
                     }
 
                     // إذا كان المسار الداخلي يطابق الصفحة الرئيسية (app/home)، نرجع لتوجيه مدار وعرض الداشبورد المخصص
                     if (internalRoute === 'app/home') {
-                        const newUrl = `${window.location.origin}/madar?route=app%2Fhome`;
+                        const newUrl = `${window.location.origin}/exa?route=app%2Fhome`;
                         window.history.replaceState({ route: 'app/home' }, "", newUrl);
                         MadarRouter.updatePosMode('app/home');
                         MadarRouter.handleCurrentRoute();
@@ -465,7 +536,7 @@ const MadarRouter = {
                     }
 
                     if (internalRoute.startsWith('app/')) {
-                        const newUrl = `${window.location.origin}/madar?route=${encodeURIComponent(internalRoute)}`;
+                        const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(internalRoute)}`;
                         
                         // تحديث شريط المتصفح الرئيسي صامتاً ليتطابق مع مكان المستخدم الحالي داخل فرابي
                         window.history.replaceState({ route: internalRoute }, "", newUrl);
@@ -536,3 +607,4 @@ if (document.readyState === "loading") {
 
 // Expose router globally
 window.MadarRouter = MadarRouter;
+window.ExaRouter = MadarRouter;
