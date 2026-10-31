@@ -44,12 +44,9 @@
 				if (typeof title === 'string') title_str = title;
 
 				const is_not_found = 
-					msg_str.includes('not available') || 
-					msg_str.includes('غير متاح') || 
-					msg_str.includes('does not exist') || 
-					msg_str.includes('غير موجود') ||
-					title_str.includes('Not found') ||
-					title_str.includes('لم يتم العثور على');
+					(msg_str.includes('The resource you are looking for is not available') || msg_str.includes('المصدر الذي تبحث عنه غير متاح')) ||
+					(title_str.includes('Not found') || title_str.includes('لم يتم العثور على')) ||
+					(msg_str.includes('Workspace') && (msg_str.includes('does not exist') || msg_str.includes('غير موجود')));
 
 				if (is_not_found) {
 					try {

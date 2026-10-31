@@ -94,9 +94,11 @@ const MadarRouter = {
         
         const findRouteRecursive = (items, routeToFind) => {
             const normalizedFind = (routeToFind === 'app/pos-awesome' || routeToFind === 'pos-awesome') ? 'app/posapp' : routeToFind;
+            const decodedFind = decodeURI(normalizedFind || '');
             for (let item of items) {
                 const itemRouteNorm = (item.route === 'app/pos-awesome' || item.route === 'pos-awesome') ? 'app/posapp' : item.route;
-                if (item.route === routeToFind || itemRouteNorm === normalizedFind) return item;
+                const itemRouteDecoded = decodeURI(itemRouteNorm || '');
+                if (item.route === routeToFind || itemRouteNorm === normalizedFind || itemRouteDecoded === decodedFind) return item;
                 if (item.children && item.children.length > 0) {
                     const found = findRouteRecursive(item.children, routeToFind);
                     if (found) return found;
@@ -176,23 +178,24 @@ const MadarRouter = {
     checkAndRouteToIframe: function(currentRoute, iframeElement) {
         const me = this;
         const normalized = (currentRoute || '').replace(/^\/+/, '');
+        const cleanForCheck = decodeURIComponent(normalized);
 
-        if (normalized === 'app' || normalized === 'app/home' || normalized === 'home') {
+        if (cleanForCheck === 'app' || cleanForCheck === 'app/home' || cleanForCheck === 'home') {
             this.renderIframe(normalized, iframeElement);
             return;
         }
 
-        if (this.routeValidityCache[normalized] !== undefined) {
-            if (this.routeValidityCache[normalized]) {
+        if (this.routeValidityCache[cleanForCheck] !== undefined) {
+            if (this.routeValidityCache[cleanForCheck]) {
                 this.renderIframe(normalized, iframeElement);
             } else {
-                this.show404(normalized);
+                this.show404(cleanForCheck);
             }
             return;
         }
 
         const csrfToken = (window.frappe && frappe.csrf_token) ? frappe.csrf_token : '';
-        fetch('/api/method/exa_theme.api.check_route_exists?route=' + encodeURIComponent(normalized), {
+        fetch('/api/method/exa_theme.api.check_route_exists?route=' + encodeURIComponent(cleanForCheck), {
             headers: {
                 'X-Frappe-CSRF-Token': csrfToken
             }
@@ -201,11 +204,11 @@ const MadarRouter = {
         .then(data => {
             const resObj = data.message || {};
             const exists = (typeof resObj === 'boolean') ? resObj : (resObj.exists === true);
-            me.routeValidityCache[normalized] = exists;
+            me.routeValidityCache[cleanForCheck] = exists;
             if (exists) {
                 me.renderIframe(normalized, iframeElement);
             } else {
-                me.show404(normalized);
+                me.show404(cleanForCheck);
             }
         })
         .catch(err => {
@@ -218,10 +221,11 @@ const MadarRouter = {
         this.switchView('iframe');
         if (!iframeElement) return;
 
-        const targetPath = '/' + currentRoute;
+        const cleanRoute = decodeURI(currentRoute || '');
+        const targetPath = '/' + encodeURI(cleanRoute);
         const sep = targetPath.includes('?') ? '&' : '?';
         const iframeTargetUrl = `${window.location.origin}${targetPath}${sep}in_exa=1&in_madar=1`;
-        const frappeRoute = currentRoute.replace(/^app\//, '');
+        const frappeRoute = cleanRoute.replace(/^app\//, '');
         
         let isInsidePos = false;
         try {
@@ -261,7 +265,7 @@ const MadarRouter = {
         this.switchView('404');
         const routeText = document.getElementById('madar404RouteText');
         if (routeText) {
-            routeText.textContent = '/' + (route || '');
+            routeText.textContent = '/' + decodeURI(route || '');
         }
         document.querySelectorAll('.menu-link').forEach(link => link.classList.remove('active'));
     },
@@ -333,7 +337,8 @@ const MadarRouter = {
                     targetRoute = 'app/posapp';
                 }
 
-                const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(targetRoute)}`;
+                const cleanTargetRoute = decodeURI(targetRoute || '');
+                const newUrl = `${window.location.origin}/exa?route=${encodeURIComponent(cleanTargetRoute)}`;
                 window.history.pushState({ route: targetRoute }, "", newUrl);
                 
                 document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));

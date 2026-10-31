@@ -128,7 +128,8 @@ const MadarSidebar = {
                         </li>`;
                 } else {
                     // 2. إذا كان العنصر رابطاً
-                    const portalLink = `/exa?route=${encodeURIComponent(item.route)}`;
+                    const cleanItemRoute = decodeURI(item.route || '');
+                    const portalLink = `/exa?route=${encodeURIComponent(cleanItemRoute)}`;
                     let isFav = '';
                     let checkboxHtml = '';
                     

@@ -970,50 +970,99 @@ def check_route_exists(route):
     if not route:
         return {"exists": False}
 
-    r = str(route).strip('/').lower()
-    if r.startswith('app/'):
-        r = r[4:]
-    elif r == 'app' or r == '':
+    from urllib.parse import unquote
+
+    # 1. Decode URL encoding (handles single and double encoding e.g. %20 -> space)
+    r = unquote(unquote(str(route))).strip()
+    r = r.split('?')[0].split('#')[0].strip('/')
+
+    if r.lower().startswith('app/'):
+        r = r[4:].strip('/')
+    elif r.lower() == 'app' or r == '':
         return {"exists": True}
 
-    parts = r.split('/')
+    if not r:
+        return {"exists": True}
+
+    parts = [p.strip() for p in r.split('/') if p.strip()]
+    if not parts:
+        return {"exists": True}
+
     first = parts[0]
+    first_lower = first.lower()
 
-    # 1. Fixed Madar routes
-    if first in ['home', 'madar-theme-settings', 'madar-font-settings', 'madar-system-settings', 'madar-menu-settings']:
+    # 1. Fixed Exa / Madar routes
+    if first_lower in [
+        'home', 'madar-theme-settings', 'madar-font-settings', 'madar-system-settings', 'madar-menu-settings',
+        'exa-theme-settings', 'exa-font-settings', 'exa-system-settings', 'exa-menu-settings'
+    ]:
         return {"exists": True}
 
-    # 2. Check Page doctype
-    if frappe.db.exists("Page", {"name": first}) or frappe.db.exists("Page", {"page_name": first}):
-        return {"exists": True}
+    # 2. Check Reports (query-report or report or view)
+    if first_lower in ['query-report', 'report', 'view']:
+        if len(parts) > 1:
+            rep_candidate = parts[-1].strip()
+            candidates = [
+                rep_candidate,
+                rep_candidate.replace('-', ' '),
+                rep_candidate.replace('_', ' '),
+                frappe.unscrub(rep_candidate)
+            ]
+            for cand in candidates:
+                if frappe.db.exists("Report", {"name": cand}) or frappe.db.exists("Report", {"report_name": cand}):
+                    return {"exists": True}
 
-    # 3. Check Workspace doctype
-    if frappe.db.exists("Workspace", {"name": first}):
-        return {"exists": True}
-    workspaces = frappe.get_all("Workspace", fields=["name", "title"])
-    for w in workspaces:
-        if frappe.scrub(w.name).replace('_', '-') == first or frappe.scrub(w.title or '').replace('_', '-') == first:
+            all_reports = frappe.get_all("Report", fields=["name"])
+            rep_lower = rep_candidate.lower().replace('-', ' ').replace('_', ' ')
+            for rep in all_reports:
+                if (rep.name.lower() == rep_lower or
+                    rep.name.lower() == rep_candidate.lower() or
+                    frappe.scrub(rep.name) == frappe.scrub(rep_candidate)):
+                    return {"exists": True}
+            return {"exists": False}
+
+    # 3. Check Page doctype
+    page_candidates = [first, first_lower, first.replace('-', '_'), first.replace('-', ' ')]
+    for pc in page_candidates:
+        if frappe.db.exists("Page", {"name": pc}) or frappe.db.exists("Page", {"page_name": pc}):
             return {"exists": True}
 
-    # 4. Check DocType (direct slug, or List/Form/Tree/Report prefix)
+    # 4. Check Workspace doctype
+    ws_candidate = parts[1] if (first_lower in ['workspaces', 'workspace'] and len(parts) > 1) else first
+    ws_candidates = [ws_candidate, ws_candidate.replace('-', ' '), ws_candidate.replace('_', ' '), frappe.unscrub(ws_candidate)]
+    for wc in ws_candidates:
+        if frappe.db.exists("Workspace", {"name": wc}) or frappe.db.exists("Workspace", {"title": wc}):
+            return {"exists": True}
+
+    workspaces = frappe.get_all("Workspace", fields=["name", "title"])
+    wc_lower = ws_candidate.lower().replace('-', ' ').replace('_', ' ')
+    for w in workspaces:
+        w_name_clean = w.name.lower().replace('-', ' ').replace('_', ' ')
+        w_title_clean = (w.title or '').lower().replace('-', ' ').replace('_', ' ')
+        if w_name_clean == wc_lower or w_title_clean == wc_lower or frappe.scrub(w.name) == frappe.scrub(ws_candidate):
+            return {"exists": True}
+
+    # 5. Check DocType (direct slug, or list/form/tree/report prefix)
     doctype_candidate = None
-    if first in ['list', 'form', 'report', 'tree'] and len(parts) > 1:
+    if first_lower in ['list', 'form', 'tree', 'report'] and len(parts) > 1:
         doctype_candidate = parts[1]
     else:
         doctype_candidate = first
 
-    if frappe.db.exists("DocType", {"name": doctype_candidate}):
-        return {"exists": True}
-
-    all_dt = frappe.get_all("DocType", fields=["name"])
-    for d in all_dt:
-        if frappe.scrub(d.name).replace('_', '-') == doctype_candidate or d.name.lower() == doctype_candidate.lower():
+    dt_candidates = [
+        doctype_candidate,
+        doctype_candidate.replace('-', ' '),
+        doctype_candidate.replace('_', ' '),
+        frappe.unscrub(doctype_candidate)
+    ]
+    for dtc in dt_candidates:
+        if frappe.db.exists("DocType", {"name": dtc}):
             return {"exists": True}
 
-    # 5. Check Report doctype
-    if first in ['query-report', 'report'] and len(parts) > 1:
-        rep_candidate = parts[-1]
-        if frappe.db.exists("Report", {"name": rep_candidate}):
+    all_dt = frappe.get_all("DocType", fields=["name"])
+    dt_lower = doctype_candidate.lower().replace('-', ' ').replace('_', ' ')
+    for d in all_dt:
+        if d.name.lower() == dt_lower or frappe.scrub(d.name) == frappe.scrub(doctype_candidate):
             return {"exists": True}
 
     return {"exists": False}
